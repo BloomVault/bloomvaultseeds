@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seed Catalogue · BloomVault Farms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="container flex between center-v">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo.png" alt="BloomVault Farms" class="logo">
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="catalogue.html">Seed Catalogue</a>
+      <a href="about.html">About</a>
+      <a href="compliance.html">Compliance & FAQ</a>
+      <a href="cart.html" class="cart-link">Cart <span id="cart-count" class="cart-count">0</span></a>
+    </nav>
+  </div>
+</header>
+<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
+
+<section class="page-head container">
+  <h1 class="page-title">Seed Catalogue</h1>
+  <p class="muted">Browse future releases. Use filters to explore categories and seed types. Add-to-cart enables automatically when items are available.</p>
+</section>
+
+<section class="filters container">
+  <div class="filter-row">
+    <label>Category
+      <select id="filter-category">
+        <option value="">All</option>
+        <option>OG</option>
+        <option>Cookies/Cake</option>
+        <option>Candy</option>
+        <option>Gas</option>
+      </select>
+    </label>
+    <label>Seed Type
+      <select id="filter-type">
+        <option value="">All</option>
+        <option>Regular</option>
+        <option>Feminized</option>
+      </select>
+    </label>
+    <label>Availability
+      <select id="filter-availability">
+        <option value="">All</option>
+        <option>Available</option>
+        <option>Coming Soon</option>
+      </select>
+    </label>
+    <input id="search" type="search" placeholder="Search strain name or lineage…">
+  </div>
+</section>
+
+<section class="catalogue container">
+  <div id="catalogue-grid" class="grid-3"></div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
+  </div>
+</footer>
+</body>
+</html>
