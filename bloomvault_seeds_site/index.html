@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home · BloomVault Farms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="container flex between center-v">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo.png" alt="BloomVault Farms" class="logo">
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="catalogue.html">Seed Catalogue</a>
+      <a href="about.html">About</a>
+      <a href="compliance.html">Compliance & FAQ</a>
+      <a href="cart.html" class="cart-link">Cart <span id="cart-count" class="cart-count">0</span></a>
+    </nav>
+  </div>
+</header>
+<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
+
+<section class="hero">
+  <div class="container hero-inner">
+    <h1 class="hero-title">Premium Cannabis Genetics, Secured in the Vault</h1>
+    <p class="hero-sub">Hybrid of luxury craft and clean, professional catalog. Discover limited releases and future drops.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="catalogue.html">Shop Seed Catalogue</a>
+      <a class="btn" href="#subscribe">Join Drop List</a>
+    </div>
+  </div>
+</section>
+
+<section class="features container">
+  <div class="grid-3">
+    <div class="card">
+      <h3>Meticulous Selection</h3>
+      <p>Each cross is selected for vigor, morphology, and distinctive terpene expression.</p>
+    </div>
+    <div class="card">
+      <h3>Vault-Grade Consistency</h3>
+      <p>Tracked batches and IDs on every drop for transparent, repeatable results.</p>
+    </div>
+    <div class="card">
+      <h3>Tested for the Real World</h3>
+      <p>Designed to satisfy both classic connoisseurs and modern bag-appeal hunters.</p>
+    </div>
+  </div>
+</section>
+
+<section class="featured container">
+  <div class="section-head">
+    <h2>Featured (Coming Soon)</h2>
+    <a class="link" href="catalogue.html">View All</a>
+  </div>
+  <div id="featured-grid" class="grid-3"></div>
+</section>
+
+<section id="subscribe" class="subscribe container">
+  <h2>Get First Dibs on Drops</h2>
+  <form id="subscribe-form" class="subscribe-form">
+    <input type="email" id="subscribe-email" placeholder="you@example.com" required>
+    <button class="btn btn-primary" type="submit">Subscribe</button>
+    <small id="subscribe-msg" class="muted"></small>
+  </form>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
+  </div>
+</footer>
+</body>
+</html>
