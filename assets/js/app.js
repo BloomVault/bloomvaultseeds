@@ -9,7 +9,6 @@
   const closeArea = drawer?.querySelector('[data-closearea]');
 
   function isSamePage(href){
-    // Normalize 'index.html' and trailing slashes
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const target = (href || '').toLowerCase();
     if (here === target) return true;
@@ -39,23 +38,20 @@
   }
 
   burger?.addEventListener('click', open);
+
+  // NEW: click-away only via dedicated overlay (does NOT overlap the drawer)
   closeArea?.addEventListener('click', close);
 
-  // Close on any nav link click
+  // Close when a nav link is clicked
   drawer?.querySelectorAll('a').forEach(a=> a.addEventListener('click', close));
 
-  // Close when clicking anywhere outside the drawer (extra safety beyond the overlay)
-  document.addEventListener('click', (e)=>{
-    if(!drawer) return;
-    const withinDrawer = e.target.closest('.bv-drawer');
-    const isBurger = e.target.closest('.bv-burger');
-    if(!withinDrawer && !isBurger && drawer.dataset.open === '1') close();
-  });
-
-  // Close on Esc
+  // Esc to close
   document.addEventListener('keydown', (e)=>{
     if(e.key === 'Escape' && drawer?.dataset.open === '1') close();
   });
+
+  // NOTE: We intentionally removed the old global document click-away
+  // listener to avoid accidental overlaps stealing link clicks.
 })();
 
 /* ---------- Compliance ribbon on scroll (after 300px) ---------- */
@@ -95,10 +91,9 @@ function updateQty(id, qty){
 document.addEventListener('DOMContentLoaded', updateCartBubbles);
 
 /* ===================== CATALOGUE RENDER ===================== */
-/* 12 Coming Soon placeholders – flip available:true & set price when launching */
 const PRODUCTS = Array.from({length:12}).map((_,i)=>({
   id:`bv-coming-${i+1}`,
-  name:`BloomVault ${i+1}`,         // kept your text
+  name:`BloomVault ${i+1}`,         // placeholder names
   category:['OG','Cookies/Cake','Candy','Gas'][i%4],
   type:(i%2===0)?'Regular':'Feminized',
   available:false,
@@ -144,7 +139,6 @@ function renderCatalogue(){
   });
 }
 
-// Hook filters
 ['filter-category','filter-type','filter-availability'].forEach(id=>{
   const el = document.getElementById(id);
   if(el) el.addEventListener('change', renderCatalogue);
