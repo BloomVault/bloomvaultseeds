@@ -183,3 +183,44 @@ a:hover{filter:brightness(1.08)}
 .bv-stickybar{position:sticky; bottom:0; z-index:40; background:linear-gradient(180deg,#121212,#0f0f0f); border-top:1px solid var(--line); padding:10px 14px; display:flex; align-items:center; gap:10px}
 .bv-stickybar .spacer{flex:1}
 .bv-link{color:var(--gold); border-bottom:1px dashed rgba(211,176,98,.45)}
+
+/* --- Seed Rain Banner --- */
+#seed-rain-banner{
+  position: relative;
+  width: 100%;
+  height: 120px;                 /* banner height */
+  overflow: hidden;
+  pointer-events: none;          /* clicks pass through */
+  isolation: isolate;
+}
+
+.seed{
+  position: absolute;
+  top: -20px;                    /* start just above the banner */
+  will-change: transform, opacity;
+  opacity: 0.95;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+  animation-name: seed-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.seed.small { transform-origin: 50% 50%; opacity: .85; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.seed.blur  { filter: blur(0.4px) drop-shadow(0 1px 1px rgba(0,0,0,.25)); opacity:.8; }
+.seed.spin  { animation-name: seed-fall, seed-spin; animation-timing-function: linear, ease-in-out;}
+
+@keyframes seed-fall{
+  0%   { transform: translateY(-20px) translateX(0); }
+  100% { transform: translateY(140px) translateX(0); } /* past bottom slightly */
+}
+
+@keyframes seed-spin{
+  0%   { rotate: 0deg; }
+  50%  { rotate: 8deg; }
+  100% { rotate: 0deg; }
+}
+
+/* Make the banner a touch shorter on very small screens (less crowded) */
+@media(max-width:480px){
+  #seed-rain-banner{ height: 96px; }
+}
