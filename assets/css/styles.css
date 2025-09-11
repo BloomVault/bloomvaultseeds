@@ -1,0 +1,73 @@
+
+:root{
+  --bg:#090909;
+  --panel:#121212;
+  --panel-2:#171717;
+  --text:#f0f0f0;
+  --muted:#b9b9b9;
+  --gold:#d4af37;
+  --gold-deep:#b9972f;
+  --silver:#c0c4c9;
+  --line:#2a2a2a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:radial-gradient(80% 80% at 50% 30%, #0b0b0b, #050505);color:var(--text);font-family:Inter,system-ui,-apple-system,Arial,sans-serif}
+a{color:var(--gold)}
+.container{width:min(1120px,92%);margin:0 auto}
+.flex{display:flex}.between{justify-content:space-between}.center-v{align-items:center}
+
+/* Header + hamburger + drawer */
+.site-header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,#0c0c0c,#060606);border-bottom:1px solid var(--line);backdrop-filter: blur(6px)}
+.logo{height:68px;display:block}
+.hamburger{background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:12px 8px;margin-left:-8px}
+.hamburger span{display:block;width:26px;height:2px;background:linear-gradient(90deg,var(--silver),#8b8f96);border-radius:2px}
+.cart-link{padding:.45rem .7rem;border:1px solid var(--line);border-radius:10px;color:var(--text);text-decoration:none}
+.cart-count{background:var(--gold);color:#111;padding:2px 6px;border-radius:999px;margin-left:6px;font-size:.8rem}
+.drawer{position:fixed;left:0;top:0;bottom:0;width:260px;background:#0f0f0f;border-right:1px solid var(--line);transform:translateX(-100%);transition:transform .25s ease;display:flex;flex-direction:column;padding-top:84px;z-index:200}
+.drawer a{padding:14px 18px;border-bottom:1px solid #141414;text-decoration:none;color:var(--text)}
+.drawer.open{transform:translateX(0)}
+
+.compliance-ribbon{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;color:#cfcfcf;border-top:1px solid var(--line);text-align:center;padding:6px 10px;font-size:.85rem;opacity:.92;z-index:99}
+
+.hero{padding:96px 0;background:radial-gradient(100% 100% at 50% 0%, rgba(212,175,55,.15), transparent)}
+.hero-title{font-size:clamp(34px,6vw,56px);line-height:1.05;font-family:'Bebas Neue',cursive;letter-spacing:.5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+.hero-sub{color:var(--muted);max-width:760px}
+.hero-ctas .btn{margin-right:12px}
+
+.btn{display:inline-block;border:1px solid var(--line);background:var(--panel);padding:.8rem 1.1rem;border-radius:10px;text-decoration:none;color:var(--text);font-weight:600}
+.btn-primary{background:linear-gradient(#e2c66c,#cba63b);border-color:#8a6c1a;color:#111}
+
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+
+.card{background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:18px}
+.page-head{padding-top:28px}
+.page-title{font-family:'Bebas Neue',cursive;font-size:42px;margin:0 0 8px;color:#fff}
+.muted{color:var(--muted)}
+
+.strain-card{background:var(--panel-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.strain-thumb{aspect-ratio:4/3;background:#111;display:block;width:100%;object-fit:cover}
+.badges{position:absolute;left:8px;top:8px;display:flex;gap:6px}
+.badge{background:rgba(0,0,0,.65);border:1px solid #333;padding:3px 8px;border-radius:999px;font-size:.75rem}
+.badge.gold{background:linear-gradient(#e2c66c,#caa03b);color:#111;border-color:#8a6c1a}
+.strain-body{padding:14px}
+.strain-name{font-weight:700;margin:2px 0 6px}
+.lineage{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{padding:4px 8px;border:1px solid var(--line);border-radius:999px;font-size:.8rem;background:#101010}
+.strain-actions{margin-top:auto;padding:12px 14px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--line)}
+.price{font-weight:700}
+.add-to-cart[disabled]{opacity:.6;cursor:not-allowed}
+
+.strain-detail .hero-img{max-width:560px;border-radius:14px;border:1px solid var(--line)}
+.strain-detail .meta{margin-top:18px}
+.strain-detail .meta dt{color:var(--muted)}
+.strain-detail .meta dd{margin:0 0 10px 0}
+
+.site-footer{margin:80px 0 64px 0;border-top:1px solid var(--line);padding-top:18px;color:#a9b3a9}
+
+.subscribe-form{display:flex;gap:10px;margin-top:8px}
+.subscribe-form input{flex:1;padding:.8rem;border-radius:10px;border:1px solid var(--line);background:#0e0e0e;color:#fff}
+
+@media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.grid-3,.grid-2{grid-template-columns:1fr}.logo{height:56px}}
