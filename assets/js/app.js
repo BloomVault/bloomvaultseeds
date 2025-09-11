@@ -1,145 +1,162 @@
+/* ===== Active link highlight + hamburger ===== */
+(function(){
+  const drawer = document.querySelector('.bv-drawer');
+  const burger = document.querySelector('.bv-burger');
+  const closeArea = drawer?.querySelector('[data-closearea]');
 
-const $=(s,c=document)=>c.querySelector(s);const $$=(s,c=document)=>[...c.querySelectorAll(s)];
-const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
+  function markActive(){
+    const here = location.pathname.split('/').pop() || 'index.html';
+    drawer?.querySelectorAll('a').forEach(a=>{
+      const href = a.getAttribute('href');
+      if (href === here) a.classList.add('active');
+    });
+  }
+  markActive();
 
-// Build 12 placeholder strains
-const SEEDS = Array.from({length:12}).map((_,i)=>({
-  id:`bv-${String(i+1).padStart(3,'0')}`,
-  name:`BloomVault ${i+1}`,
+  function open(){ if(drawer) drawer.dataset.open = '1'; }
+  function close(){ if(drawer) drawer.dataset.open = '0'; }
+
+  burger?.addEventListener('click', open);
+  closeArea?.addEventListener('click', close);
+  drawer?.querySelectorAll('a').forEach(a=> a.addEventListener('click', close));
+})();
+
+/* ===== Compliance ribbon on scroll (after 300px) ===== */
+(function(){
+  const ribbon = document.querySelector('.bv-ribbon');
+  if(!ribbon) return;
+  const onScroll = ()=> ribbon.dataset.show = (window.scrollY > 300) ? '1' : '0';
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+
+/* ===== Cart store ===== */
+const CART_KEY = 'bv_cart_v1';
+const readCart = ()=> { try{ return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); }catch{ return []; } };
+const writeCart = items => localStorage.setItem(CART_KEY, JSON.stringify(items));
+const cartCount = ()=> readCart().reduce((n,i)=>n+i.qty,0);
+const updateCartBubbles = ()=> document.querySelectorAll('[data-cart-count]').forEach(el=> el.textContent = cartCount());
+
+function addToCart(item){
+  const items = readCart();
+  const found = items.find(i=>i.id===item.id);
+  if(found){ found.qty += item.qty||1; } else { items.push({...item, qty:item.qty||1}); }
+  writeCart(items); updateCartBubbles(); renderCart();
+}
+function removeFromCart(id){ writeCart(readCart().filter(i=>i.id!==id)); updateCartBubbles(); renderCart(); }
+function updateQty(id, qty){ const it = readCart().find(i=>i.id===id); if(it){ it.qty = Math.max(1, qty|0); writeCart(readCart()); renderCart(); } }
+
+document.addEventListener('DOMContentLoaded', updateCartBubbles);
+
+/* ===== Catalogue: 12 Coming Soon placeholders ===== */
+const PRODUCTS = Array.from({length:12}).map((_,i)=>({
+  id:`bv-coming-${i+1}`,
+  name:`BloomVault ${i+1}`,         // kept your text
   category:['OG','Cookies/Cake','Candy','Gas'][i%4],
-  type: (i%2===0)?'Feminized':'Regular',
-  availability:'Coming Soon',
-  price: 0,
-  img:'assets/img/placeholder.svg',
-  badges:['Coming Soon'],
-  lineage:['Coming Soon.'],
-  flavor:'Coming Soon.',
-  desc:'Coming Soon.'
+  type:(i%2===0)?'Regular':'Feminized',
+  available:false,
+  price:null                        // shows "—"
 }));
 
-// Cart
-function getCart(){return store.get('cart',[])}
-function setCart(c){store.set('cart',c);updateCartCount()}
-function addToCart(id,qty=1){
-  const s = SEEDS.find(x=>x.id===id);
-  if(s && s.availability!=='Available'){ alert('This item is Coming Soon.'); return; }
-  const c=getCart();const idx=c.findIndex(x=>x.id===id);
-  if(idx>-1){c[idx].qty+=qty}else{c.push({id,qty})} setCart(c);
-}
-function removeFromCart(id){setCart(getCart().filter(i=>i.id!==id))}
-function updateQty(id,qty){setCart(getCart().map(i=>i.id===id?{...i,qty:Math.max(1,qty)}:i))}
-function updateCartCount(){const el=$('#cart-count');if(!el)return;el.textContent=getCart().reduce((n,i)=>n+i.qty,0)};updateCartCount();
-
-function renderCart(){
-  const wrap=$('#cart-view');if(!wrap)return;
-  const items=getCart();const empty=$('#cart-empty');
-  if(items.length===0){wrap.innerHTML=''; if(empty) empty.style.display='block'; return;}
-  if(empty) empty.style.display='none';
-  let total=0;
-  wrap.innerHTML=items.map(it=>{
-    const s=SEEDS.find(x=>x.id===it.id);
-    const price = s ? s.price : 0; total += price*it.qty;
-    return `<div class="card flex between center-v" style="gap:12px;flex-wrap:wrap">
-      <div style="display:flex;gap:12px;align-items:center">
-        <img src="${s?.img||'assets/img/placeholder.svg'}" style="width:90px;height:70px;object-fit:cover;border-radius:8px;border:1px solid #242424">
-        <div><strong>${s?s.name:it.id}</strong><div class="muted">$${price} – ${s?.type||''}</div></div>
+function renderCatalogue(){
+  const grid = document.querySelector('[data-grid]');
+  if(!grid) return;
+  const cat = document.querySelector('#filter-category')?.value || 'All';
+  const typ = document.querySelector('#filter-type')?.value || 'All';
+  const avail = document.querySelector('#filter-availability')?.value || 'All';
+  const items = PRODUCTS.filter(p =>
+    (cat==='All'||p.category===cat) &&
+    (typ==='All'||p.type===typ) &&
+    (avail==='All'|| (avail==='Available'? p.available : !p.available))
+  );
+  grid.innerHTML = items.map(p=>`
+    <div class="bv-card">
+      <div class="top">
+        <div>
+          <div class="bv-title">${p.name}</div>
+          <div class="bv-meta">${p.category} • ${p.type}</div>
+        </div>
+        <span class="bv-pill">${p.available ? 'Available' : 'Coming&nbsp;Soon'}</span>
       </div>
-      <div>
-        <input type="number" min="1" value="${it.qty}" data-id="${it.id}" class="qty-input">
-        <button class="btn" data-remove="${it.id}">Remove</button>
-      </div>
-    </div>`
-  }).join('')+`<div class="card"><h3>Subtotal: $${total}</h3><p class="muted">Checkout enables when products are Available.</p></div>`;
-  $$('.qty-input',wrap).forEach(inp=>inp.addEventListener('change',e=>updateQty(e.target.dataset.id,parseInt(e.target.value||1,10))));
-  $$('[data-remove]',wrap).forEach(btn=>btn.addEventListener('click',e=>removeFromCart(e.target.dataset.remove)));
-}
-
-// Filters & Catalogue
-function badgeHtml(list){return `<div class="badges">`+list.map(b=>`<span class="badge ${/new|limited/i.test(b)?'gold':''}">${b}</span>`).join('')+`</div>`}
-function cardHtml(s){
-  const dis = s.availability!=='Available' ? 'disabled' : '';
-  return `<article class="strain-card">
-    <div class="media" style="position:relative">
-      ${s.badges?badgeHtml(s.badges):''}
-      <a href="strain.html?id=${s.id}"><img src="${s.img}" class="strain-thumb" alt="${s.name}"></a>
-    </div>
-    <div class="strain-body">
-      <h3 class="strain-name">${s.name}</h3>
-      <div class="lineage">${s.lineage.map(l=>`<span class="chip">${l}</span>`).join('')}</div>
-      <p class="muted">${s.desc}</p>
-    </div>
-    <div class="strain-actions">
-      <span class="price">$${s.price}</span>
-      <button class="btn add-to-cart" data-id="${s.id}" ${dis}>Add to Cart</button>
-      <small class="muted" style="margin-left:auto">${s.availability}</small>
-    </div>
-  </article>`;
-}
-function renderCatalogue(list){
-  const grid=$('#catalogue-grid'); if(!grid) return;
-  grid.innerHTML = list.map(cardHtml).join('');
-  $$('.add-to-cart',grid).forEach(btn=>btn.addEventListener('click',e=>addToCart(e.target.dataset.id)));
-}
-function applyFilters(){
-  const cat=$('#filter-category')?.value||'';
-  const typ=$('#filter-type')?.value||'';
-  const av=$('#filter-availability')?.value||'';
-  const q=($('#search')?.value||'').toLowerCase();
-  const filtered=SEEDS.filter(s=>(!cat||s.category===cat)&&(!typ||s.type===typ)&&(!av||s.availability===av)&&(!q||s.name.toLowerCase().includes(q)||s.lineage.join(' ').toLowerCase().includes(q)));
-  renderCatalogue(filtered);
-}
-
-// Strain detail
-function renderStrain(){
-  const wrap=$('#strain-detail'); if(!wrap) return;
-  const id=new URLSearchParams(location.search).get('id');
-  const s = SEEDS.find(x=>x.id===id) || SEEDS[0];
-  wrap.innerHTML = `<div class="grid-2">
-    <div><img class="hero-img" src="${s.img}" alt="${s.name}"></div>
-    <div>
-      <h1 class="page-title">${s.name}</h1>
-      <p class="muted">${s.desc}</p>
-      <dl class="meta">
-        <dt>Lineage</dt><dd>${s.lineage.join(' × ')}</dd>
-        <dt>Category</dt><dd>${s.category}</dd>
-        <dt>Seed Type</dt><dd>${s.type}</dd>
-        <dt>Flavor Notes</dt><dd>${s.flavor}</dd>
-        <dt>Availability</dt><dd>${s.availability}</dd>
-      </dl>
-      <div class="strain-actions">
-        <span class="price">$${s.price}</span>
-        <button class="btn add-detail" ${s.availability!=='Available'?'disabled':''} data-id="${s.id}">Add to Cart</button>
+      <div class="bv-coming"><span>COMING SOON.</span></div>
+      <div class="bv-actions">
+        <button class="bv-btn" ${p.available?'':'disabled'} data-add="${p.id}">
+          ${p.available? 'Add to Cart' : 'Add Disabled'}
+        </button>
+        <span class="bv-meta">${p.price==null ? '—' : `$${p.price.toFixed(2)}`}</span>
       </div>
     </div>
-  </div>`;
-  $('.add-detail')?.addEventListener('click',e=>addToCart(e.target.dataset.id));
+  `).join('');
+  grid.querySelectorAll('[data-add]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const prod = PRODUCTS.find(p=>p.id===btn.getAttribute('data-add'));
+      if(!prod || !prod.available) return;
+      addToCart({ id: prod.id, name: prod.name, price: prod.price || 0 });
+    });
+  });
 }
-
-// Featured
-function renderFeatured(){const grid=$('#featured-grid'); if(!grid) return; grid.innerHTML = SEEDS.slice(0,3).map(cardHtml).join('');
-  $$('.add-to-cart',grid).forEach(btn=>btn.addEventListener('click',e=>addToCart(e.target.dataset.id)));
-}
-
-// Subscribe (local only)
-$('#subscribe-form')?.addEventListener('submit',e=>{e.preventDefault();const email=$('#subscribe-email').value.trim();if(!email)return;
-  const list=store.get('mailing_list',[]); if(!list.includes(email)) list.push(email); store.set('mailing_list',list);
-  $('#subscribe-msg').textContent='Subscribed locally. Email delivery will be enabled later.'; e.target.reset();
+['filter-category','filter-type','filter-availability'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('change', renderCatalogue);
 });
+document.addEventListener('DOMContentLoaded', renderCatalogue);
 
-// Filters
-$('#filter-category')?.addEventListener('change',applyFilters);
-$('#filter-type')?.addEventListener('change',applyFilters);
-$('#filter-availability')?.addEventListener('change',applyFilters);
-$('#search')?.addEventListener('input',applyFilters);
+/* ===== Cart rendering (sticky bar + empty + continue) ===== */
+function renderCart(){
+  const root = document.querySelector('[data-cart-root]');
+  if(!root) return;
+  const items = readCart();
+  if(!items.length){
+    root.innerHTML = `<p>Your cart is empty. Visit the <a class="bv-link" href="catalogue.html">Seed Catalogue</a> to add items.</p>`;
+    document.querySelector('[data-total]')?.replaceChildren(document.createTextNode('$0.00'));
+    return;
+  }
+  root.innerHTML = items.map(i=>`
+    <div class="bv-card">
+      <div class="top">
+        <div>
+          <div class="bv-title">${i.name}</div>
+          <div class="bv-meta">ID: ${i.id}</div>
+        </div>
+        <button class="bv-btn" data-remove="${i.id}">Remove</button>
+      </div>
+      <div class="bv-actions">
+        <div class="bv-meta">Price: ${i.price!=null? `$${i.price.toFixed(2)}` : '—'}</div>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px">
+          <label class="bv-meta" for="qty-${i.id}">Qty</label>
+          <input id="qty-${i.id}" type="number" min="1" value="${i.qty}" style="width:74px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
+        </div>
+      </div>
+    </div>
+  `).join('');
 
-// Drawer toggle
-$('#hamburger')?.addEventListener('click', ()=> $('#drawer').classList.toggle('open'));
+  root.querySelectorAll('[data-remove]').forEach(b=> b.addEventListener('click',()=> removeFromCart(b.getAttribute('data-remove'))));
+  items.forEach(i=>{
+    const inp = document.getElementById(`qty-${i.id}`);
+    if(inp) inp.addEventListener('change', ()=> updateQty(i.id, +inp.value));
+  });
 
-document.addEventListener('DOMContentLoaded',()=>{
-  const yel = document.getElementById('year'); if(yel) yel.textContent = new Date().getFullYear();
-  if($('#catalogue-grid')){ renderCatalogue(SEEDS); applyFilters(); }
-  if($('#strain-detail')){ renderStrain(); }
-  if($('#featured-grid')){ renderFeatured(); }
-  if($('#cart-view')){ renderCart(); }
-  window.addEventListener('storage', updateCartCount);
+  const total = items.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
+  document.querySelector('[data-total]')?.replaceChildren(document.createTextNode(`$${total.toFixed(2)}`));
+}
+
+/* action buttons on cart */
+document.addEventListener('click', (e)=>{
+  const empty = e.target.closest('[data-empty]');
+  if(empty){ e.preventDefault(); writeCart([]); updateCartBubbles(); renderCart(); }
+
+  const shop = e.target.closest('[data-continue]');
+  if(shop){ e.preventDefault(); location.href = 'catalogue.html'; }
+
+  const checkout = e.target.closest('[data-checkout]');
+  if(checkout){
+    e.preventDefault();
+    const items = readCart();
+    if(!items.length) return;
+    const body = encodeURIComponent(
+      `Hi BloomVault,\n\nI’d like to purchase the following:\n\n` +
+      items.map(i=>`• ${i.name} x${i.qty} — ${i.price!=null? `$${(i.price*i.qty).toFixed(2)}` : '—'}`).join('\n') +
+      `\n\nTotal: $${items.reduce((n,i)=>n+(i.price||0)*i.qty,0).toFixed(2)}\n\nName:\nShipping address:\n\nThanks!`
+    );
+    location.href = `mailto:bloomvaultfarms@gmail.com?subject=BloomVault Order&body=${body}`;
+  }
 });
