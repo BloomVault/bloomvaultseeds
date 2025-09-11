@@ -4,43 +4,82 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cart · BloomVault Farms</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Your original stylesheet (kept) -->
   <link rel="stylesheet" href="assets/css/styles.css">
+
+  <!-- NEW luxe theme -->
+  <link rel="stylesheet" href="assets/css/luxe.css">
+
+  <!-- NEW app JS (drawer behavior, cart store/render, ribbon on scroll) -->
   <script defer src="assets/js/app.js"></script>
 </head>
 <body>
-<header class="site-header">
-  <div class="container flex between center-v">
-    <button class="hamburger" id="hamburger" aria-label="Open Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <a class="brand" href="index.html">
-      <img src="assets/img/logo.png" alt="BloomVault Farms" class="logo">
-    </a>
-    <a href="cart.html" class="cart-link">Cart <span id="cart-count" class="cart-count">0</span></a>
-  </div>
-  <nav class="drawer" id="drawer">
-    <a href="index.html">Home</a>
-    <a href="catalogue.html">Seed Catalogue</a>
-    <a href="about.html">About</a>
-    <a href="compliance.html">Compliance & FAQ</a>
-    <a href="cart.html">Cart</a>
-  </nav>
-</header>
-<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
 
-<section class="container">
-  <h1 class="page-title">Your Cart</h1>
-  <div id="cart-view"></div>
-  <div id="cart-empty" class="card" style="display:none"><p>Your cart is empty. Visit the <a href="catalogue.html">Seed Catalogue</a> to add items.</p></div>
-</section>
+  <!-- Luxe Header -->
+  <header class="bv-header">
+    <div class="bv-wrap">
+      <button class="bv-burger" aria-label="Open menu"><span></span><span></span><span></span></button>
 
-<footer class="site-footer">
-  <div class="container">
-    <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
+      <div class="bv-logo">
+        <a class="brand" href="index.html" aria-label="BloomVault Farms">
+          <img src="assets/img/logo.png" alt="BloomVault Farms" />
+        </a>
+      </div>
+
+      <nav class="bv-drawer" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="catalogue.html">Seed Catalogue</a>
+        <a href="about.html">About</a>
+        <a href="compliance.html">Compliance & FAQ</a>
+        <a href="cart.html">Cart <span class="bv-badge" data-cart-count>0</span></a>
+        <div class="bv-drawer-closearea" data-closearea></div>
+      </nav>
+
+      <div class="bv-cartchip">Cart <span data-cart-count>0</span></div>
+    </div>
+  </header>
+
+  <!-- Compliance ribbon (appears after ~300px scroll) -->
+  <div class="bv-ribbon">
+    <div class="bv-inner">
+      Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
+    </div>
   </div>
-</footer>
+
+  <!-- Main -->
+  <main class="bv-main">
+    <section class="container">
+      <h1 class="page-title">Your Cart</h1>
+
+      <!-- JS will render items here -->
+      <div data-cart-root></div>
+
+      <!-- Sticky subtotal / actions bar -->
+      <div class="bv-stickybar">
+        <a href="catalogue.html" class="bv-link" data-continue>Continue shopping</a>
+        <div class="spacer"></div>
+        <strong>Subtotal: <span data-total>$0.00</span></strong>
+        <button class="bv-btn" data-empty>Empty Cart</button>
+        <button class="bv-btn" data-checkout>Checkout</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bv-footer bv-main">
+    <div class="container">
+      <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
