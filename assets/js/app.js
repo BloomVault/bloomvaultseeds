@@ -231,3 +231,98 @@ function renderFeatured(){
   `).join('');
 }
 document.addEventListener('DOMContentLoaded', renderFeatured);
+
+/* ===== Seed Rain Banner ===== */
+(function(){
+  const banner = document.getElementById('seed-rain-banner');
+  if(!banner) return;
+
+  // Inline SVG “seed” (realistic shading; transparent background)
+  const seedSVG = encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 18">
+      <defs>
+        <radialGradient id="g1" cx="40%" cy="40%" r="70%">
+          <stop offset="0%"  stop-color="#c7b08b"/>
+          <stop offset="45%" stop-color="#9b835f"/>
+          <stop offset="100%" stop-color="#5b4b35"/>
+        </radialGradient>
+        <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="rgba(255,255,255,.55)"/>
+          <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+      </defs>
+      <!-- Seed body -->
+      <ellipse cx="14" cy="9" rx="12" ry="7.2" fill="url(#g1)"/>
+      <!-- Seam / mottling -->
+      <path d="M3.5 8.7c4.5 4.8 16.2 4.8 21.0 0" fill="none" stroke="rgba(30,20,12,.35)" stroke-width="1.2" stroke-linecap="round"/>
+      <!-- Specular highlight -->
+      <ellipse cx="10" cy="6.2" rx="4.2" ry="2.1" fill="url(#shine)" />
+    </svg>
+  `);
+
+  const SEED_COUNT = Math.min(80, Math.max(36, Math.floor(window.innerWidth / 18))); // scale with width
+  const MIN_SIZE = 10;   // px (smallest seed width)
+  const MAX_SIZE = 28;   // px (largest seed width)
+  const MIN_DURATION = 3.8; // seconds
+  const MAX_DURATION = 7.5; // seconds
+  const MAX_DELAY = 6.0;    // seconds (staggered starts)
+
+  function rand(min, max){ return Math.random() * (max - min) + min; }
+
+  for(let i=0; i<SEED_COUNT; i++){
+    const el = document.createElement('img');
+    el.className = 'seed';
+
+    // Depth layers
+    if (Math.random() < 0.45) el.classList.add('small');
+    if (Math.random() < 0.35) el.classList.add('blur');
+    if (Math.random() < 0.60) el.classList.add('spin');
+
+    const size = rand(MIN_SIZE, MAX_SIZE);
+    el.width = size; el.height = size * 0.64; // keep proportions
+    el.alt = ''; el.decoding = 'async';
+    el.src = `data:image/svg+xml;charset=utf-8,${seedSVG}`;
+
+    // Position & animation
+    const x = rand(0, banner.clientWidth);
+    el.style.left = `${x}px`;
+
+    // Slight horizontal drift per lane (avoid overlap)
+    const drift = (Math.random() < 0.5 ? -1 : 1) * rand(0.4, 1.2);
+    el.style.animationDuration = `${rand(MIN_DURATION, MAX_DURATION)}s`;
+    el.style.animationDelay = `${rand(0, MAX_DELAY)}s`;
+
+    // Individualized keyframes with drift (per element)
+    const driftName = `fall-${i}`;
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ${driftName}{
+        0%   { transform: translateY(-20px) translateX(0); }
+        100% { transform: translateY(${banner.clientHeight + 20}px) translateX(${drift * 18}px); }
+      }
+    `;
+    document.head.appendChild(style);
+    el.style.animationName = el.classList.contains('spin') ? `${driftName}, seed-spin` : driftName;
+
+    // When a seed finishes a cycle, re-randomize its lane for a natural distribution
+    el.addEventListener('animationiteration', ()=>{
+      const nx = rand(0, banner.clientWidth);
+      el.style.left = `${nx}px`;
+    });
+
+    banner.appendChild(el);
+  }
+
+  // Reflow on resize so lanes match width
+  let t;
+  window.addEventListener('resize', ()=>{
+    clearTimeout(t);
+    t = setTimeout(()=>{
+      document.querySelectorAll('#seed-rain-banner .seed').forEach(el=>{
+        el.style.left = `${rand(0, banner.clientWidth)}px`;
+      });
+    }, 120);
+  });
+
+  function rand(min, max){ return Math.random() * (max - min) + min; }
+})();
