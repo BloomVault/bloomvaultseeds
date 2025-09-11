@@ -1,35 +1,73 @@
-/* ===== Active link highlight + hamburger ===== */
+/* =========================================================
+   BloomVault – App JS (drawer, ribbon, catalogue, cart)
+   ========================================================= */
+
+/* ---------- Active link highlight + hamburger/drawer ---------- */
 (function(){
   const drawer = document.querySelector('.bv-drawer');
   const burger = document.querySelector('.bv-burger');
   const closeArea = drawer?.querySelector('[data-closearea]');
 
+  function isSamePage(href){
+    // Normalize 'index.html' and trailing slashes
+    const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    const target = (href || '').toLowerCase();
+    if (here === target) return true;
+    if (here === 'index.html' && (target === '' || target === './' || target === '/')) return true;
+    return false;
+  }
+
   function markActive(){
-    const here = location.pathname.split('/').pop() || 'index.html';
     drawer?.querySelectorAll('a').forEach(a=>{
       const href = a.getAttribute('href');
-      if (href === here) a.classList.add('active');
+      if (isSamePage(href)) a.classList.add('active');
     });
   }
   markActive();
 
-  function open(){ if(drawer) drawer.dataset.open = '1'; }
-  function close(){ if(drawer) drawer.dataset.open = '0'; }
+  function open(){
+    if(!drawer) return;
+    drawer.dataset.open = '1';
+    burger?.setAttribute('aria-expanded','true');
+    drawer.setAttribute('aria-hidden','false');
+  }
+  function close(){
+    if(!drawer) return;
+    drawer.dataset.open = '0';
+    burger?.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+  }
 
   burger?.addEventListener('click', open);
   closeArea?.addEventListener('click', close);
+
+  // Close on any nav link click
   drawer?.querySelectorAll('a').forEach(a=> a.addEventListener('click', close));
+
+  // Close when clicking anywhere outside the drawer (extra safety beyond the overlay)
+  document.addEventListener('click', (e)=>{
+    if(!drawer) return;
+    const withinDrawer = e.target.closest('.bv-drawer');
+    const isBurger = e.target.closest('.bv-burger');
+    if(!withinDrawer && !isBurger && drawer.dataset.open === '1') close();
+  });
+
+  // Close on Esc
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && drawer?.dataset.open === '1') close();
+  });
 })();
 
-/* ===== Compliance ribbon on scroll (after 300px) ===== */
+/* ---------- Compliance ribbon on scroll (after 300px) ---------- */
 (function(){
   const ribbon = document.querySelector('.bv-ribbon');
   if(!ribbon) return;
-  const onScroll = ()=> ribbon.dataset.show = (window.scrollY > 300) ? '1' : '0';
-  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+  const onScroll = ()=> { ribbon.dataset.show = (window.scrollY > 300) ? '1' : '0'; };
+  onScroll();
+  window.addEventListener('scroll', onScroll, {passive:true});
 })();
 
-/* ===== Cart store ===== */
+/* ======================== CART STORE ======================== */
 const CART_KEY = 'bv_cart_v1';
 const readCart = ()=> { try{ return JSON.parse(localStorage.getItem(CART_KEY)||'[]'); }catch{ return []; } };
 const writeCart = items => localStorage.setItem(CART_KEY, JSON.stringify(items));
@@ -43,11 +81,21 @@ function addToCart(item){
   writeCart(items); updateCartBubbles(); renderCart();
 }
 function removeFromCart(id){ writeCart(readCart().filter(i=>i.id!==id)); updateCartBubbles(); renderCart(); }
-function updateQty(id, qty){ const it = readCart().find(i=>i.id===id); if(it){ it.qty = Math.max(1, qty|0); writeCart(readCart()); renderCart(); } }
+function updateQty(id, qty){
+  const items = readCart();
+  const it = items.find(i=>i.id===id);
+  if(it){
+    it.qty = Math.max(1, qty|0);
+    writeCart(items);
+    renderCart();
+    updateCartBubbles();
+  }
+}
 
 document.addEventListener('DOMContentLoaded', updateCartBubbles);
 
-/* ===== Catalogue: 12 Coming Soon placeholders ===== */
+/* ===================== CATALOGUE RENDER ===================== */
+/* 12 Coming Soon placeholders – flip available:true & set price when launching */
 const PRODUCTS = Array.from({length:12}).map((_,i)=>({
   id:`bv-coming-${i+1}`,
   name:`BloomVault ${i+1}`,         // kept your text
@@ -86,6 +134,7 @@ function renderCatalogue(){
       </div>
     </div>
   `).join('');
+
   grid.querySelectorAll('[data-add]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const prod = PRODUCTS.find(p=>p.id===btn.getAttribute('data-add'));
@@ -94,22 +143,26 @@ function renderCatalogue(){
     });
   });
 }
+
+// Hook filters
 ['filter-category','filter-type','filter-availability'].forEach(id=>{
   const el = document.getElementById(id);
   if(el) el.addEventListener('change', renderCatalogue);
 });
 document.addEventListener('DOMContentLoaded', renderCatalogue);
 
-/* ===== Cart rendering (sticky bar + empty + continue) ===== */
+/* ======================= CART RENDER ======================== */
 function renderCart(){
   const root = document.querySelector('[data-cart-root]');
   if(!root) return;
   const items = readCart();
+
   if(!items.length){
     root.innerHTML = `<p>Your cart is empty. Visit the <a class="bv-link" href="catalogue.html">Seed Catalogue</a> to add items.</p>`;
     document.querySelector('[data-total]')?.replaceChildren(document.createTextNode('$0.00'));
     return;
   }
+
   root.innerHTML = items.map(i=>`
     <div class="bv-card">
       <div class="top">
@@ -139,7 +192,7 @@ function renderCart(){
   document.querySelector('[data-total]')?.replaceChildren(document.createTextNode(`$${total.toFixed(2)}`));
 }
 
-/* action buttons on cart */
+/* Cart action buttons */
 document.addEventListener('click', (e)=>{
   const empty = e.target.closest('[data-empty]');
   if(empty){ e.preventDefault(); writeCart([]); updateCartBubbles(); renderCart(); }
@@ -160,3 +213,27 @@ document.addEventListener('click', (e)=>{
     location.href = `mailto:bloomvaultfarms@gmail.com?subject=BloomVault Order&body=${body}`;
   }
 });
+
+/* ====================== FEATURED (Home) ===================== */
+function renderFeatured(){
+  const grid = document.getElementById('featured-grid');
+  if(!grid) return;
+  const picks = PRODUCTS.slice(0,3);
+  grid.innerHTML = picks.map(p=>`
+    <div class="bv-card">
+      <div class="top">
+        <div>
+          <div class="bv-title">${p.name}</div>
+          <div class="bv-meta">${p.category} • ${p.type}</div>
+        </div>
+        <span class="bv-pill">Coming&nbsp;Soon</span>
+      </div>
+      <div class="bv-coming"><span>COMING SOON.</span></div>
+      <div class="bv-actions">
+        <button class="bv-btn" disabled>Add Disabled</button>
+        <span class="bv-meta">—</span>
+      </div>
+    </div>
+  `).join('');
+}
+document.addEventListener('DOMContentLoaded', renderFeatured);
