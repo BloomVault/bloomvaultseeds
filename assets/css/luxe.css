@@ -15,6 +15,8 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:
 h1,h2,h3{font-family:"Bebas Neue",system-ui,sans-serif;letter-spacing:.3px}
 a{color:var(--gold);text-decoration:none}
 a:hover{filter:brightness(1.08)}
+:focus-visible{outline:2px solid color-mix(in srgb, var(--gold) 60%, #fff 40%);outline-offset:2px}
+
 .bv-main{max-width:1100px;margin:0 auto;padding:18px 16px}
 
 /* Header & Logo */
@@ -27,7 +29,8 @@ a:hover{filter:brightness(1.08)}
 .bv-burger{display:flex;flex-direction:column;gap:4px;width:32px;background:transparent;border:0;cursor:pointer}
 .bv-burger span{height:2px;background:var(--silver);display:block}
 .bv-drawer{position:fixed;inset:0 40% 0 0;max-width:340px;background:#0b0b0b;border-right:1px solid var(--line);transform:translateX(-100%);transition:transform .18s ease;display:flex;flex-direction:column;padding:18px 16px;gap:8px}
-.bv-drawer a{padding:12px 10px;border-radius:12px;font-weight:700;color:#e8e8e8;border:1px solid transparent}
+.bv-drawer a{padding:12px 10px;border-radius:12px;font-weight:700;color:#e8e8e8;border:1px solid transparent;transition:box-shadow .12s ease, outline-color .12s ease}
+.bv-drawer a:hover{box-shadow:inset 0 0 0 1px rgba(211,176,98,.35)}
 .bv-drawer a.active{background:linear-gradient(180deg,#171717,#0f0f0f);outline:1px solid #2c2c2c;box-shadow:inset 0 0 0 1px #000, 0 0 0 1px rgba(211,176,98,.35)}
 .bv-drawer[data-open="1"]{transform:translateX(0)}
 .bv-drawer-closearea{position:fixed;inset:0 0 0 min(60%,calc(100% - 340px));background:transparent}
@@ -38,8 +41,11 @@ a:hover{filter:brightness(1.08)}
 }
 .bv-cartchip{margin-left:auto;font-size:13px;color:var(--silver)}
 
+/* Small badge (used in Cart link) */
+.bv-badge{margin-left:6px;padding:2px 6px;border:1px solid #333;border-radius:999px;font-size:11px;color:var(--silver);background:#0e0e0e}
+
 /* Buttons */
-.bv-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid #3a2b0c;background:linear-gradient(180deg,#e1c37a,#ae7e1e);color:#111;font-weight:800;cursor:pointer;transition:transform .06s ease}
+.bv-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid #3a2b0c;background:linear-gradient(180deg,#e1c37a,#ae7e1e);color:#111;font-weight:800;cursor:pointer;transition:transform .06s ease, box-shadow .12s ease}
 .bv-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(211,176,98,.15)}
 .bv-btn[disabled]{opacity:.6;cursor:not-allowed}
 
@@ -64,11 +70,11 @@ a:hover{filter:brightness(1.08)}
 
 /* Hero polish */
 .bv-hero{position:relative;background:radial-gradient(110% 70% at 50% 0%, rgba(240,205,126,.16), transparent 60%), linear-gradient(180deg, rgba(200,200,210,.06), transparent 40%), linear-gradient(180deg,#0a0a0a, #090909)}
-.bv-hero:after{content:\"\";position:absolute;inset:0;background:radial-gradient(80% 50% at 50% 20%, rgba(205,215,230,.12), transparent 60%);pointer-events:none}
+.bv-hero:after{content:"";position:absolute;inset:0;background:radial-gradient(80% 50% at 50% 20%, rgba(205,215,230,.12), transparent 60%);pointer-events:none}
 
 /* Compliance ribbon (smaller, low opacity, on scroll) */
 .bv-ribbon{position:sticky;top:74px;z-index:55;font-size:12px;opacity:.65;display:none}
-.bv-ribbon[data-show=\"1\"]{display:block}
+.bv-ribbon[data-show="1"]{display:block}
 .bv-ribbon .bv-inner{max-width:1100px;margin:0 auto;padding:8px 16px;color:#c9c9c9}
 
 /* Sticky subtotal bar (Cart) */
