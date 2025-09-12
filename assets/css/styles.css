@@ -71,3 +71,82 @@ a{color:var(--gold)}
 
 @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.grid-3,.grid-2{grid-template-columns:1fr}.logo{height:56px}}
+
+/* ==== BloomVault tabs-only header compatibility (drop-in) ==== */
+:root{
+  --bg:#080808; --panel:#101010; --gold:#d3b062; --gold-2:#b2872a;
+  --silver:#cfd6de; --text:#ededed; --muted:#a2a8ae; --line:#272727;
+}
+
+.bv-header{
+  position:sticky; top:0; z-index:60;
+  background:linear-gradient(180deg,#0a0a0af2 0%, #090909 100%);
+  border-bottom:1px solid var(--line);
+}
+.bv-wrap{
+  max-width:1100px; margin:0 auto; padding:16px 16px;
+  display:flex; align-items:center; justify-content:center;
+  min-height:92px; position:relative;
+}
+@media(max-width:640px){ .bv-wrap{min-height:80px; padding:12px} }
+
+.bv-logo{display:flex; align-items:center; justify-content:center}
+.bv-logo img{
+  height:clamp(64px, 5vw + 40px, 112px);
+  display:block; filter:drop-shadow(0 0 10px rgba(210,220,230,.25));
+}
+
+/* Cart chip pinned right */
+.bv-cartchip{
+  position:absolute; right:16px; top:50%; transform:translateY(-50%);
+  font-size:14px; color:var(--silver);
+}
+.bv-badge{
+  margin-left:6px; padding:2px 6px; border:1px solid #333;
+  border-radius:999px; font-size:11px; color:var(--silver); background:#0e0e0e;
+}
+
+/* Tabs under logo (no hamburger) */
+.bv-tabs{
+  display:flex; justify-content:center; gap:8px;
+  padding:10px 12px; background:linear-gradient(180deg,#0f0f0f,#0b0b0b);
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+}
+@media(max-width:640px){
+  .bv-tabs{ gap:6px; padding:8px; overflow:auto hidden; scroll-snap-type:x mandatory }
+  .bv-tabs a{ scroll-snap-align:center }
+}
+.bv-tabs a{
+  display:inline-flex; align-items:center; white-space:nowrap;
+  padding:10px 12px; border-radius:999px; font-weight:700; color:#e8e8e8;
+  border:1px solid transparent; position:relative;
+}
+.bv-tabs a:hover{ box-shadow:inset 0 0 0 1px rgba(211,176,98,.35) }
+.bv-tabs a.active{
+  background:linear-gradient(180deg,#171717,#0f0f0f);
+  outline:1px solid #2c2c2c;
+  box-shadow:inset 0 0 0 1px #000, 0 0 0 1px rgba(211,176,98,.35);
+}
+.bv-tabs a.active:after{
+  content:""; position:absolute; left:12px; right:12px; bottom:-7px;
+  height:2px; border-radius:2px; background:linear-gradient(90deg,transparent, var(--gold), transparent);
+}
+
+/* Seed banner sizing */
+#seed-rain-banner{ position:relative; width:100%; height:120px; overflow:hidden; pointer-events:none; isolation:isolate }
+@media(max-width:480px){ #seed-rain-banner{ height:96px } }
+
+/* Seed sprite helpers */
+.seed{ position:absolute; top:-20px; will-change:transform,opacity; opacity:.95;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); animation-timing-function:linear; animation-iteration-count:infinite }
+.seed.small{ transform-origin:50% 50%; opacity:.85; filter:drop-shadow(0 1px 1px rgba(0,0,0,.25)) }
+.seed.blur{ filter: blur(0.4px) drop-shadow(0 1px 1px rgba(0,0,0,.25)); opacity:.8 }
+.seed.spin{ animation-name: seed-spin }
+@keyframes seed-spin{ 0%{rotate:0deg} 50%{rotate:8deg} 100%{rotate:0deg} }
+
+/* Make legacy compliance ribbon match new behavior */
+.compliance-ribbon{
+  position:sticky; top: calc(80px + 52px); /* sits under header + tabs */
+  z-index:55; font-size:12px; opacity:.70; display:none; padding:8px 16px; color:#c9c9c9
+}
+@media(min-width:641px){ .compliance-ribbon{ top: calc(92px + 58px) } }
