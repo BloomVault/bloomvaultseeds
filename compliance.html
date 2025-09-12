@@ -4,94 +4,64 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Compliance & FAQ · BloomVault Farms</title>
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Your original stylesheet (kept) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
-
-  <!-- NEW luxe theme -->
-  <link rel="stylesheet" href="assets/css/luxe.css">
-
-  <!-- NEW app JS (drawer behavior, ribbon on scroll, cart bubble) -->
   <script defer src="assets/js/app.js"></script>
 </head>
 <body>
-
-  <!-- Luxe Header -->
-  <header class="bv-header">
-    <div class="bv-wrap">
-      <button class="bv-burger" aria-label="Open menu"><span></span><span></span><span></span></button>
-
-      <div class="bv-logo">
-        <a class="brand" href="index.html" aria-label="BloomVault Farms">
-          <img src="assets/img/logo.png" alt="BloomVault Farms" />
-        </a>
-      </div>
-
-      <nav class="bv-drawer" aria-label="Primary">
-  <div class="drawer-logo">
-    <img src="assets/img/logo.png" alt="BloomVault Logo">
-  </div>
-  <a href="index.html">Home</a>
-  <a href="catalogue.html">Seed Catalogue</a>
-  <a href="about.html">About</a>
-  <a href="compliance.html">Compliance & FAQ</a>
-  <a href="cart.html">Cart <span class="bv-badge" data-cart-count>0</span></a>
-  <div class="bv-drawer-closearea" data-closearea></div>
-</nav>
-
-
-      <div class="bv-cartchip">Cart <span data-cart-count>0</span></div>
+<header class="bv-header">
+  <div class="bv-wrap">
+    <div class="bv-logo">
+      <a class="brand" href="index.html" aria-label="BloomVault Farms">
+        <img src="assets/img/logo.png" alt="BloomVault Farms">
+      </a>
     </div>
-  </header>
-
-  <!-- Compliance ribbon (appears after ~300px scroll) -->
-  <div class="bv-ribbon">
-    <div class="bv-inner">
-      Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
-    </div>
+    <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
   </div>
 
-  <!-- Main -->
-  <main class="bv-main">
-    <section class="container">
-      <h1 class="page-title">Compliance &amp; FAQ</h1>
+  <!-- TABS (no hamburger) -->
+  <nav class="bv-tabs" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="catalogue.html">Seed Catalogue</a>
+    <a href="about.html">About</a>
+    <a href="compliance.html">Compliance &amp; FAQ</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+</header>
 
-      <div class="card">
-        <h3>Important Notice</h3>
-        <p>All cannabis seeds are sold as novelty/souvenir genetics. Germination and cultivation are subject to your local laws. By purchasing, you agree you are 21+ and will comply with all applicable regulations in your jurisdiction.</p>
-      </div>
+<!-- Seed Rain Banner sits directly under the tabs -->
+<div id="seed-rain-banner" aria-hidden="true"></div>
 
-      <div class="grid-2">
-        <div class="card">
-          <h3>Shipping</h3>
-          <ul>
-            <li>Seeds only; no plant material is shipped.</li>
-            <li>Discrete packaging. Tracking provided where available.</li>
-            <li>We reserve the right to refuse orders to jurisdictions with restrictions.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Returns</h3>
-          <p>Due to the nature of seeds, all sales are final. If your order arrives damaged, contact us with your order ID within 72 hours.</p>
-        </div>
-      </div>
-    </section>
-  </main>
+<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
 
-  <!-- Footer -->
-  <footer class="bv-footer bv-main">
-    <div class="container">
-      <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
+<section class="container">
+  <h1 class="page-title">Compliance & FAQ</h1>
+  <div class="card">
+    <h3>Important Notice</h3>
+    <p>All cannabis seeds are sold as novelty/souvenir genetics. Germination and cultivation are subject to your local laws. By purchasing, you agree you are 21+ and will comply with all applicable regulations in your jurisdiction.</p>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Shipping</h3>
+      <ul>
+        <li>Seeds only; no plant material is shipped.</li>
+        <li>Discrete packaging. Tracking provided where available.</li>
+        <li>We reserve the right to refuse orders to jurisdictions with restrictions.</li>
+      </ul>
     </div>
-  </footer>
+    <div class="card">
+      <h3>Returns</h3>
+      <p>Due to the nature of seeds, all sales are final. If your order arrives damaged, contact us with your order ID within 72 hours.</p>
+    </div>
+  </div>
+</section>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+<footer class="site-footer">
+  <div class="container">
+    <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
+  </div>
+</footer>
 </body>
 </html>
