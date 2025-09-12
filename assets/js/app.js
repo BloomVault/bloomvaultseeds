@@ -1,13 +1,9 @@
 /* =========================================================
-   BloomVault – App JS (drawer, ribbon, catalogue, cart)
+   BloomVault – App JS (tabs, ribbon, catalogue, cart)
    ========================================================= */
 
-/* ---------- Active link highlight + hamburger/drawer ---------- */
+/* ---------- Active link highlight (tabs-only) ---------- */
 (function(){
-  const drawer = document.querySelector('.bv-drawer');
-  const burger = document.querySelector('.bv-burger');
-  const closeArea = drawer?.querySelector('[data-closearea]');
-
   function isSamePage(href){
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const target = (href || '').toLowerCase();
@@ -15,42 +11,10 @@
     if (here === 'index.html' && (target === '' || target === './' || target === '/')) return true;
     return false;
   }
-
-  function markActive(){
-    drawer?.querySelectorAll('a').forEach(a=>{
-      const href = a.getAttribute('href');
-      if (isSamePage(href)) a.classList.add('active');
-    });
-  }
-  markActive();
-
-  function open(){
-    if(!drawer) return;
-    drawer.dataset.open = '1';
-    burger?.setAttribute('aria-expanded','true');
-    drawer.setAttribute('aria-hidden','false');
-  }
-  function close(){
-    if(!drawer) return;
-    drawer.dataset.open = '0';
-    burger?.setAttribute('aria-expanded','false');
-    drawer.setAttribute('aria-hidden','true');
-  }
-
-  burger?.addEventListener('click', open);
-
-  // Click-away only via dedicated overlay (does NOT overlap the drawer)
-  closeArea?.addEventListener('click', close);
-
-  // Close when a nav link is clicked
-  drawer?.querySelectorAll('a').forEach(a=> a.addEventListener('click', close));
-
-  // Esc to close
-  document.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape' && drawer?.dataset.open === '1') close();
+  document.querySelectorAll('.bv-tabs a')?.forEach(a=>{
+    const href = a.getAttribute('href');
+    if (isSamePage(href)) a.classList.add('active');
   });
-
-  // NOTE: Global document click-away listener intentionally removed.
 })();
 
 /* ---------- Compliance ribbon on scroll (after 300px) ---------- */
@@ -231,45 +195,24 @@ function renderFeatured(){
 }
 document.addEventListener('DOMContentLoaded', renderFeatured);
 
-/* ===== Seed Rain Banner – custom image with SVG fallback ===== */
+/* ===== Seed Rain Banner (custom image with fallback) ===== */
 (function(){
   const banner = document.getElementById('seed-rain-banner');
   if(!banner) return;
 
-  // Path to your transparent seed sprite (case-sensitive on GitHub Pages)
   const SEED_SRC = 'assets/img/seed.png';
-
-  // SVG fallback (used if the PNG/WebP fails to load)
-  const FALLBACK_SVG = encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 18">
-      <defs>
-        <radialGradient id="g1" cx="40%" cy="40%" r="70%">
-          <stop offset="0%"  stop-color="#c7b08b"/>
-          <stop offset="45%" stop-color="#9b835f"/>
-          <stop offset="100%" stop-color="#5b4b35"/>
-        </radialGradient>
-        <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="rgba(255,255,255,.55)"/>
-          <stop offset="1" stop-color="rgba(255,255,255,0)"/>
-        </linearGradient>
-      </defs>
-      <ellipse cx="14" cy="9" rx="12" ry="7.2" fill="url(#g1)"/>
-      <path d="M3.5 8.7c4.5 4.8 16.2 4.8 21.0 0" fill="none" stroke="rgba(30,20,12,.35)" stroke-width="1.2" stroke-linecap="round"/>
-      <ellipse cx="10" cy="6.2" rx="4.2" ry="2.1" fill="url(#shine)" />
-    </svg>
-  `);
-
-  const FALLBACK_ASPECT = 0.64; // height/width
-  const SEED_COUNT   = Math.min(80, Math.max(36, Math.floor(window.innerWidth / 18)));
-  const MIN_SIZE     = 12;
-  const MAX_SIZE     = 32;
-  const MIN_DURATION = 3.8;
-  const MAX_DURATION = 7.5;
-  const MAX_DELAY    = 6.0;
+  const FALLBACK_ASPECT = 0.64;
 
   function rand(min, max){ return Math.random() * (max - min) + min; }
 
   function addSeeds({src, aspect}){
+    const SEED_COUNT   = Math.min(80, Math.max(36, Math.floor(window.innerWidth / 18)));
+    const MIN_SIZE     = 12;
+    const MAX_SIZE     = 32;
+    const MIN_DURATION = 3.8;
+    const MAX_DURATION = 7.5;
+    const MAX_DELAY    = 6.0;
+
     for(let i=0; i<SEED_COUNT; i++){
       const el = document.createElement('img');
       el.className = 'seed';
@@ -280,7 +223,8 @@ document.addEventListener('DOMContentLoaded', renderFeatured);
       const size = rand(MIN_SIZE, MAX_SIZE);
       el.width  = Math.round(size);
       el.height = Math.round(size * aspect);
-      el.alt = ''; el.decoding = 'async';
+      el.alt = '';
+      el.decoding = 'async';
       el.src = src;
 
       const x = rand(0, banner.clientWidth);
@@ -309,7 +253,6 @@ document.addEventListener('DOMContentLoaded', renderFeatured);
     }
   }
 
-  // Preload your PNG/WebP; if it fails, use the SVG fallback
   const probe = new Image();
   probe.onload = ()=>{
     const aspect = probe.naturalHeight && probe.naturalWidth
@@ -318,12 +261,11 @@ document.addEventListener('DOMContentLoaded', renderFeatured);
     addSeeds({ src: SEED_SRC, aspect });
   };
   probe.onerror = ()=>{
-    console.warn('Seed sprite failed to load at', SEED_SRC, '— using SVG fallback.');
-    addSeeds({ src: `data:image/svg+xml;charset=utf-8,${FALLBACK_SVG}`, aspect: FALLBACK_ASPECT });
+    console.warn('Seed sprite failed to load, using fallback.');
+    addSeeds({ src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 18"><ellipse cx="14" cy="9" rx="12" ry="7.2" fill="#9b835f"/></svg>')}`, aspect: FALLBACK_ASPECT });
   };
   probe.src = SEED_SRC;
 
-  // Reflow on resize so lanes match width
   let t;
   window.addEventListener('resize', ()=>{
     clearTimeout(t);
@@ -334,3 +276,4 @@ document.addEventListener('DOMContentLoaded', renderFeatured);
     }, 120);
   });
 })();
+
