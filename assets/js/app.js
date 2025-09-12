@@ -367,7 +367,7 @@ function closeProductModal(){
     msg.textContent = '';
 
     try{
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+      await emailjs.send(service_5n04n5s, template_5567czh, {
         customer_email: email,
         page_url: location.href,
         timestamp: new Date().toISOString()
