@@ -206,11 +206,11 @@ document.addEventListener('DOMContentLoaded', renderFeatured);
   function rand(min, max){ return Math.random() * (max - min) + min; }
 
   function addSeeds({src, aspect}){
-    const SEED_COUNT   = Math.min(80, Math.max(36, Math.floor(window.innerWidth / 18)));
-    const MIN_SIZE     = 12;
-    const MAX_SIZE     = 32;
-    const MIN_DURATION = 3.8;
-    const MAX_DURATION = 7.5;
+    const SEED_COUNT   = Math.min(99, Math.max(50, Math.floor(window.innerWidth / 18)));
+    const MIN_SIZE     = 10;
+    const MAX_SIZE     = 30;
+    const MIN_DURATION = 3.5;
+    const MAX_DURATION = 7.8;
     const MAX_DELAY    = 6.0;
 
     for(let i=0; i<SEED_COUNT; i++){
