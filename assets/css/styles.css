@@ -279,3 +279,66 @@ a{color:var(--gold)}
   color:var(--gold);
   text-shadow:0 0 4px rgba(211,176,98,.4);
 }
+
+/* ===================== Playing-Card Placeholders ===================== */
+.bv-card.placeholder{
+  background:transparent;
+  border:2px solid var(--gold);
+  border-radius:14px;
+  overflow:hidden;
+  padding:0;
+  transition:box-shadow .18s ease, transform .12s ease;
+}
+.bv-card.placeholder:hover{
+  box-shadow:0 0 10px rgba(211,176,98,.3), inset 0 0 0 1px rgba(211,176,98,.2);
+  transform:translateY(-1px);
+}
+
+/* The “card face” on top (3:4 aspect) */
+.ph-card-visual{
+  position:relative;
+  width:100%;
+  aspect-ratio:3/4;                  /* playing card proportions */
+  background:
+    radial-gradient(60% 50% at 50% 30%, rgba(211,176,98,.10), transparent 60%),
+    linear-gradient(180deg, #151515, #0f0f0f);
+  display:flex; align-items:center; justify-content:center;
+  border-bottom:1px solid rgba(211,176,98,.25);
+}
+.ph-pill{
+  position:absolute; top:8px; left:8px;
+  font-size:11px; padding:3px 9px; border-radius:999px;
+  color:#111; background:linear-gradient(180deg,#e1c37a,#ae7e1e);
+  border:1px solid #3a2b0c;
+}
+
+/* Optional watermark “BV” look inside the card */
+.ph-mark{
+  font-family:"Bebas Neue", system-ui, sans-serif;
+  font-size:28px; letter-spacing:.8px; color:var(--gold);
+  text-shadow:0 0 4px rgba(211,176,98,.35);
+  opacity:.9;
+}
+
+/* Text area UNDER the card face */
+.ph-body{
+  text-align:center;
+  padding:10px 10px 12px;
+}
+.ph-name{
+  font-family:"Bebas Neue", system-ui, sans-serif;
+  font-size:20px; letter-spacing:.6px; color:#e8e8e8; margin:2px 0 4px;
+}
+.ph-sub{ color:var(--muted); font-size:12.5px }
+
+/* Small “details” button */
+.ph-actions{ margin-top:8px }
+.bv-card.placeholder .btn{
+  padding:7px 10px; font-size:13.5px; border-radius:999px;
+}
+
+/* Tighter grid spacing on small screens */
+@media (max-width:640px){
+  .ph-name{ font-size:18px }
+  .ph-card-visual{ aspect-ratio:3/4 }
+}
