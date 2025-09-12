@@ -17,6 +17,27 @@
   });
 })();
 
+/* ---------- Compliance ribbon on scroll (supports old/new class) ---------- */
+(function(){
+  const ribbon = document.querySelector('.bv-ribbon') || document.querySelector('.compliance-ribbon');
+  if(!ribbon) return;
+
+  const show = ()=> {
+    // If it has data attribute behavior (new style)
+    if ('show' in ribbon.dataset) ribbon.dataset.show = '1';
+    // Always ensure it's visible
+    ribbon.style.display = 'block';
+  };
+  const hide = ()=> {
+    if ('show' in ribbon.dataset) ribbon.dataset.show = '0';
+    ribbon.style.display = 'none';
+  };
+
+  const onScroll = ()=> (window.scrollY > 300 ? show() : hide());
+  onScroll();
+  window.addEventListener('scroll', onScroll, {passive:true});
+})();
+
 /* ---------- Compliance ribbon on scroll (after 300px) ---------- */
 (function(){
   const ribbon = document.querySelector('.bv-ribbon');
