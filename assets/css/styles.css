@@ -150,3 +150,57 @@ a{color:var(--gold)}
   z-index:55; font-size:12px; opacity:.70; display:none; padding:8px 16px; color:#c9c9c9
 }
 @media(min-width:641px){ .compliance-ribbon{ top: calc(92px + 58px) } }
+
+/* ===================== Mobile Polish Patch ===================== */
+@media (max-width: 640px){
+
+  /* Header: a bit shorter, bigger logo without crowding */
+  .bv-wrap{
+    min-height: 78px;
+    padding: 10px 12px;
+  }
+  .bv-logo img{
+    height: clamp(56px, 9vw + 32px, 82px);
+  }
+
+  /* Cart chip: keep badge, soften text size */
+  .bv-cartchip{
+    right: 12px;
+    font-size: 13px;
+  }
+  .bv-badge{
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  /* Tabs: comfortable tap targets + horizontal scroll if cramped */
+  .bv-tabs{
+    padding: 8px 8px;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .bv-tabs a{
+    scroll-snap-align: center;
+    padding: 9px 10px;
+    font-size: 14px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .bv-tabs a.active:after{
+    bottom: -6px; /* keep underline visible on smaller bar */
+  }
+
+  /* Seed banner: a touch shorter on phones */
+  #seed-rain-banner{
+    height: 96px;
+  }
+}
+
+/* Ultra-small phones */
+@media (max-width: 380px){
+  .bv-logo img{ height: clamp(52px, 10vw + 28px, 74px); }
+  .bv-tabs a{ padding: 8px 9px; font-size: 13.5px; }
+}
