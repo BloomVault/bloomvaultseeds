@@ -259,3 +259,23 @@ a{color:var(--gold)}
 .btn.btn-primary:hover, .bv-btn.btn-primary:hover {
   box-shadow:0 0 10px rgba(211,176,98,.55);
 }
+
+/* ===================== Catalogue Placeholder Cards ===================== */
+.bv-card.placeholder {
+  background:transparent;
+  border:2px solid var(--gold);
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:220px;
+  text-align:center;
+}
+
+.bv-card.placeholder span {
+  font-family:"Bebas Neue", system-ui, sans-serif;
+  font-size:28px;
+  letter-spacing:1px;
+  color:var(--gold);
+  text-shadow:0 0 4px rgba(211,176,98,.4);
+}
