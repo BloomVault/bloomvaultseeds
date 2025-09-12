@@ -386,3 +386,54 @@ function closeProductModal(){
     }
   });
 })();
+
+/* ===== Subscribe form → EmailJS send ===== */
+(function(){
+  const form = document.getElementById('subscribe-form');
+  if (!form || typeof emailjs === 'undefined') return;
+
+  const input = document.getElementById('subscribe-email');
+  const msg   = document.getElementById('subscribe-msg');
+  const btn   = form.querySelector('button[type="submit"]');
+
+  // ✅ Your EmailJS IDs
+  const SERVICE_ID  = 'service_5n04n5s';   // <-- replace with your actual Service ID
+  const TEMPLATE_ID = 'template_5567czh'; // your template ID
+
+  const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const email = (input.value || '').trim();
+
+    if (!isEmail(email)){
+      msg.textContent = 'Please enter a valid email address.';
+      msg.style.color = '#f77';
+      input.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    msg.textContent = '';
+
+    try{
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+        customer_email: email,
+        page_url: location.href,
+        timestamp: new Date().toISOString()
+      });
+
+      msg.textContent = 'Thanks! You’re on the drop list — watch your inbox.';
+      msg.style.color = '';
+      form.reset();
+    }catch(err){
+      console.error(err);
+      msg.textContent = 'Something went wrong. Please try again or email bloomvaultfarms@gmail.com.';
+      msg.style.color = '#f77';
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'Subscribe';
+    }
+  });
+})();
