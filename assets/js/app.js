@@ -23,9 +23,7 @@
   if(!ribbon) return;
 
   const show = ()=> {
-    // If it has data attribute behavior (new style)
     if ('show' in ribbon.dataset) ribbon.dataset.show = '1';
-    // Always ensure it's visible
     ribbon.style.display = 'block';
   };
   const hide = ()=> {
@@ -34,15 +32,6 @@
   };
 
   const onScroll = ()=> (window.scrollY > 300 ? show() : hide());
-  onScroll();
-  window.addEventListener('scroll', onScroll, {passive:true});
-})();
-
-/* ---------- Compliance ribbon on scroll (after 300px) ---------- */
-(function(){
-  const ribbon = document.querySelector('.bv-ribbon');
-  if(!ribbon) return;
-  const onScroll = ()=> { ribbon.dataset.show = (window.scrollY > 300) ? '1' : '0'; };
   onScroll();
   window.addEventListener('scroll', onScroll, {passive:true});
 })();
@@ -74,60 +63,69 @@ function updateQty(id, qty){
 
 document.addEventListener('DOMContentLoaded', updateCartBubbles);
 
-/* ===================== CATALOGUE RENDER ===================== */
+/* ===================== PRODUCT PLACEHOLDERS ===================== */
 const PRODUCTS = Array.from({length:12}).map((_,i)=>({
   id:`bv-coming-${i+1}`,
-  name:`BloomVault ${i+1}`,         // placeholder names
+  name:`BloomVault Drop ${String(i+1).padStart(2,'0')}`,
   category:['OG','Cookies/Cake','Candy','Gas'][i%4],
   type:(i%2===0)?'Regular':'Feminized',
   available:false,
-  price:null                        // shows "—"
+  price:null,           // shows "—"
+  lineage:'—',
+  notes:'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
 }));
 
+/* Card template: playing-card style with text underneath */
+function placeholderCardHTML(p){
+  return `
+    <div class="bv-card placeholder" data-id="${p.id}">
+      <div class="ph-card-visual" data-info="${p.id}">
+        <span class="ph-pill">COMING&nbsp;SOON</span>
+        <div class="ph-mark">BV</div>
+      </div>
+      <div class="ph-body">
+        <div class="ph-name">${p.name}</div>
+        <div class="ph-sub">${p.category} • ${p.type}</div>
+        <div class="ph-actions">
+          <button class="btn" type="button" data-info="${p.id}">View Details</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ===================== CATALOGUE RENDER ===================== */
 function renderCatalogue(){
-  const grid = document.querySelector('[data-grid]');
+  // Prefer #catalogue-grid (your HTML), fallback to [data-grid] if present
+  const grid = document.getElementById('catalogue-grid') || document.querySelector('[data-grid]');
   if(!grid) return;
+
   const cat = document.querySelector('#filter-category')?.value || 'All';
   const typ = document.querySelector('#filter-type')?.value || 'All';
   const avail = document.querySelector('#filter-availability')?.value || 'All';
+
   const items = PRODUCTS.filter(p =>
     (cat==='All'||p.category===cat) &&
     (typ==='All'||p.type===typ) &&
     (avail==='All'|| (avail==='Available'? p.available : !p.available))
   );
-  grid.innerHTML = items.map(p=>`
-    <div class="bv-card">
-      <div class="top">
-        <div>
-          <div class="bv-title">${p.name}</div>
-          <div class="bv-meta">${p.category} • ${p.type}</div>
-        </div>
-        <span class="bv-pill">${p.available ? 'Available' : 'Coming&nbsp;Soon'}</span>
-      </div>
-      <div class="bv-coming"><span>COMING SOON.</span></div>
-      <div class="bv-actions">
-        <button class="bv-btn" ${p.available?'':'disabled'} data-add="${p.id}">
-          ${p.available? 'Add to Cart' : 'Add Disabled'}
-        </button>
-        <span class="bv-meta">${p.price==null ? '—' : `$${p.price.toFixed(2)}`}</span>
-      </div>
-    </div>
-  `).join('');
 
-  grid.querySelectorAll('[data-add]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const prod = PRODUCTS.find(p=>p.id===btn.getAttribute('data-add'));
-      if(!prod || !prod.available) return;
-      addToCart({ id: prod.id, name: prod.name, price: prod.price || 0 });
+  grid.innerHTML = items.map(placeholderCardHTML).join('');
+
+  // Open modal when clicking the card face or the "View Details" button
+  grid.querySelectorAll('[data-info], .bv-card.placeholder').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      const id = e.currentTarget.getAttribute('data-info') || e.currentTarget.getAttribute('data-id');
+      const prod = PRODUCTS.find(p=>p.id===id);
+      if(prod) openProductModal(prod);
     });
   });
 }
-
+document.addEventListener('DOMContentLoaded', renderCatalogue);
 ['filter-category','filter-type','filter-availability'].forEach(id=>{
   const el = document.getElementById(id);
   if(el) el.addEventListener('change', renderCatalogue);
 });
-document.addEventListener('DOMContentLoaded', renderCatalogue);
 
 /* ======================= CART RENDER ======================== */
 function renderCart(){
@@ -197,24 +195,64 @@ function renderFeatured(){
   const grid = document.getElementById('featured-grid');
   if(!grid) return;
   const picks = PRODUCTS.slice(0,3);
-  grid.innerHTML = picks.map(p=>`
-    <div class="bv-card">
-      <div class="top">
-        <div>
-          <div class="bv-title">${p.name}</div>
-          <div class="bv-meta">${p.category} • ${p.type}</div>
-        </div>
-        <span class="bv-pill">Coming&nbsp;Soon</span>
-      </div>
-      <div class="bv-coming"><span>COMING SOON.</span></div>
-      <div class="bv-actions">
-        <button class="bv-btn" disabled>Add Disabled</button>
-        <span class="bv-meta">—</span>
-      </div>
-    </div>
-  `).join('');
+  grid.innerHTML = picks.map(placeholderCardHTML).join('');
+
+  grid.querySelectorAll('[data-info], .bv-card.placeholder').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      const id = e.currentTarget.getAttribute('data-info') || e.currentTarget.getAttribute('data-id');
+      const prod = PRODUCTS.find(p=>p.id===id);
+      if(prod) openProductModal(prod);
+    });
+  });
 }
 document.addEventListener('DOMContentLoaded', renderFeatured);
+
+/* ======================= PRODUCT MODAL ======================= */
+(function ensureModalMount(){
+  if(document.getElementById('bv-modal-root')) return;
+  const root = document.createElement('div');
+  root.id = 'bv-modal-root';
+  root.innerHTML = `
+    <div class="bv-modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="bv-modal" role="document">
+        <h3 id="bv-modal-title">Strain Name</h3>
+        <div class="meta" id="bv-modal-meta"></div>
+        <p id="bv-modal-lineage"><strong>Lineage:</strong> —</p>
+        <p id="bv-modal-notes"></p>
+        <div class="actions">
+          <button class="btn-close" type="button" data-close>Close</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(root);
+
+  root.querySelector('[data-close]')?.addEventListener('click', closeProductModal);
+  root.querySelector('.bv-modal-backdrop')?.addEventListener('click', (e)=>{
+    if(e.target.classList.contains('bv-modal-backdrop')) closeProductModal();
+  });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeProductModal(); });
+})();
+
+function openProductModal(prod){
+  const backdrop = document.querySelector('.bv-modal-backdrop');
+  if(!backdrop) return;
+
+  document.getElementById('bv-modal-title').textContent = prod.name;
+  document.getElementById('bv-modal-meta').textContent = `${prod.category} • ${prod.type} • ${prod.available ? 'Available' : 'Coming Soon'}`;
+  document.getElementById('bv-modal-lineage').innerHTML = `<strong>Lineage:</strong> ${prod.lineage || '—'}`;
+  document.getElementById('bv-modal-notes').textContent = prod.notes || '—';
+
+  backdrop.setAttribute('data-show', '1');
+  backdrop.setAttribute('aria-hidden','false');
+}
+
+function closeProductModal(){
+  const backdrop = document.querySelector('.bv-modal-backdrop');
+  if(!backdrop) return;
+  backdrop.removeAttribute('data-show');
+  backdrop.setAttribute('aria-hidden','true');
+}
 
 /* ===== Seed Rain Banner (custom image with fallback) ===== */
 (function(){
@@ -297,4 +335,3 @@ document.addEventListener('DOMContentLoaded', renderFeatured);
     }, 120);
   });
 })();
-
