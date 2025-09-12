@@ -224,3 +224,86 @@ a:hover{filter:brightness(1.08)}
 @media(max-width:480px){
   #seed-rain-banner{ height: 96px; }
 }
+
+/* --- Tabs-only nav: remove old hamburger/drawer --- */
+.bv-burger, .bv-drawer, .bv-drawer-closearea { display:none !important; }
+
+/* Header: centered, large logo */
+.bv-header{
+  position:sticky; top:0; z-index:60;
+  background:linear-gradient(180deg,#0a0a0af2 0%, #090909 100%);
+  border-bottom:1px solid var(--line);
+}
+.bv-wrap{
+  max-width:1100px; margin:0 auto; padding:16px 16px;
+  display:flex; align-items:center; justify-content:center;
+  min-height:96px; position:relative;
+}
+@media(max-width:640px){ .bv-wrap{min-height:84px; padding:12px 12px} }
+
+.bv-logo{display:flex; align-items:center; justify-content:center}
+.bv-logo img{
+  height:clamp(72px, 7vw + 48px, 128px);
+  display:block;
+  filter:drop-shadow(0 0 10px rgba(210,220,230,.25));
+}
+
+/* Cart chip pinned right */
+.bv-cartchip{
+  position:absolute; right:16px; top:50%; transform:translateY(-50%);
+  font-size:14px; color:var(--silver);
+}
+.bv-badge{
+  margin-left:6px; padding:2px 6px; border:1px solid #333;
+  border-radius:999px; font-size:11px; color:var(--silver); background:#0e0e0e;
+}
+
+/* --- Tabs bar (under the logo) --- */
+.bv-tabs{
+  display:flex; justify-content:center; gap:8px;
+  padding:10px 12px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,#0f0f0f,#0b0b0b);
+}
+@media(max-width:640px){
+  .bv-tabs{
+    gap:6px; padding:8px 8px;
+    overflow:auto hidden; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+  }
+  .bv-tabs a{ scroll-snap-align:center; }
+}
+.bv-tabs a{
+  display:inline-flex; align-items:center;
+  padding:10px 12px; border-radius:999px;
+  font-weight:700; color:#e8e8e8; border:1px solid transparent;
+  position:relative; white-space:nowrap;
+}
+.bv-tabs a:hover{ box-shadow:inset 0 0 0 1px rgba(211,176,98,.35) }
+.bv-tabs a.active{
+  background:linear-gradient(180deg,#171717,#0f0f0f);
+  outline:1px solid #2c2c2c;
+  box-shadow:inset 0 0 0 1px #000, 0 0 0 1px rgba(211,176,98,.35);
+}
+.bv-tabs a.active:after{
+  content:""; position:absolute; left:12px; right:12px; bottom:-7px;
+  height:2px; border-radius:2px; background:linear-gradient(90deg,transparent, var(--gold), transparent);
+}
+
+/* Seed banner sizing (if not already present) */
+#seed-rain-banner{
+  position: relative; width: 100%; height: 120px;
+  overflow: hidden; pointer-events:none; isolation:isolate;
+}
+@media(max-width:480px){ #seed-rain-banner{ height:96px } }
+
+/* Seed sprite helpers (for the animation you added earlier) */
+.seed{
+  position:absolute; top:-20px; will-change:transform, opacity; opacity:0.95;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+  animation-timing-function: linear; animation-iteration-count: infinite;
+}
+.seed.small{ transform-origin:50% 50%; opacity:.85; filter:drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.seed.blur{ filter: blur(0.4px) drop-shadow(0 1px 1px rgba(0,0,0,.25)); opacity:.8; }
+.seed.spin{ animation-name: seed-spin; }
+@keyframes seed-spin{ 0%{rotate:0deg} 50%{rotate:8deg} 100%{rotate:0deg} }
