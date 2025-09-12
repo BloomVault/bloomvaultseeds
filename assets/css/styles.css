@@ -204,3 +204,16 @@ a{color:var(--gold)}
   .bv-logo img{ height: clamp(52px, 10vw + 28px, 74px); }
   .bv-tabs a{ padding: 8px 9px; font-size: 13.5px; }
 }
+
+/* ===================== Logo Enhancement Patch ===================== */
+
+/* Make the logo ~2.5x larger across devices */
+.bv-logo img{
+  height: clamp(120px, 20vw + 60px, 240px); /* grows with screen, max ~240px */
+}
+
+/* Replace silver glow with a constant gold glow */
+.bv-logo img{
+  filter: drop-shadow(0 0 14px rgba(211,176,98,0.95))
+          drop-shadow(0 0 28px rgba(211,176,98,0.55));
+}
