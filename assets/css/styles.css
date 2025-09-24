@@ -384,3 +384,107 @@ a{color:var(--gold)}
 #featured-grid .bv-card.placeholder{
   max-width:100%;
 }
+
+/* ========== Move compliance notice to bottom ========== */
+.compliance-ribbon{
+  position: static;            /* no sticky at top */
+  margin: 24px auto 0;
+  max-width: 1100px;
+  padding: 10px 14px;
+  color: #c9c9c9;
+  opacity: .85;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+
+/* ========== Strain cards: "locked vault" playing-card look ========== */
+.bv-card.placeholder{
+  background: transparent;
+  border: 2px solid var(--gold);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow .18s ease, transform .12s ease;
+}
+.bv-card.placeholder:hover{
+  box-shadow: 0 0 10px rgba(211,176,98,.3), inset 0 0 0 1px rgba(211,176,98,.2);
+  transform: translateY(-1px);
+}
+.ph-card-visual{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  background:
+    radial-gradient(60% 50% at 50% 30%, rgba(211,176,98,.10), transparent 60%),
+    linear-gradient(180deg, #151515, #0f0f0f);
+  display: grid; place-items: center;
+  border-bottom: 1px solid rgba(211,176,98,.25);
+}
+.ph-card-visual .lock{
+  width: 56%;
+  max-width: 180px;
+  opacity: .92;
+  filter: drop-shadow(0 0 8px rgba(211,176,98,.25));
+}
+.ph-pill{
+  position:absolute; top:8px; left:8px;
+  font-size:11px; padding:3px 9px; border-radius:999px;
+  color:#111; background:linear-gradient(180deg,#e1c37a,#ae7e1e);
+  border:1px solid #3a2b0c;
+}
+.ph-body{ text-align:center; padding:10px 10px 12px }
+.ph-name{
+  font-family:"Bebas Neue",system-ui,sans-serif;
+  font-size:20px; letter-spacing:.6px; color:#e8e8e8; margin:2px 0 4px;
+}
+.ph-sub{ color:var(--muted); font-size:12.5px }
+.ph-actions{ margin-top:8px }
+.ph-actions .btn{ padding:7px 10px; font-size:13.5px; border-radius:999px }
+
+/* Featured & Catalogue responsive grids (keeps layout as-is elsewhere) */
+#catalogue-grid, #featured-grid{
+  display:grid; gap:12px;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+}
+@media (min-width:640px){ #catalogue-grid, #featured-grid{ grid-template-columns: repeat(3, 1fr); gap:14px; } }
+@media (min-width:900px){ #catalogue-grid, #featured-grid{ grid-template-columns: repeat(4, 1fr); gap:16px; } }
+@media (min-width:1200px){#catalogue-grid, #featured-grid{ grid-template-columns: repeat(5, 1fr); gap:18px; } }
+
+/* ========== Remove the old modal footer text (we removed modal entirely) ========== */
+.bv-modal-backdrop{ display:none !important; } /* defensive if any leftover HTML */
+
+/* ========== Compliance & FAQ page: add spacing between cards ========== */
+.page-compliance .grid-2{ gap:18px }
+.page-compliance .card{ margin-bottom:0 }
+
+/* ========== Hide old cart chip in header ========== */
+.bv-cartchip{ display: none !important }
+
+/* ========== Cart tab badge (in the nav tabs) ========== */
+.bv-tabs a .tab-badge{
+  margin-left:6px; font-size:11px; padding:2px 7px; border-radius:999px;
+  color:#111; background:linear-gradient(180deg,#e1c37a,#ae7e1e); border:1px solid #3a2b0c;
+  display:inline-block; vertical-align:middle;
+}
+
+/* ========== Cart page: empty prompt button style ========== */
+.cart-empty{
+  text-align:center; padding:16px; border:1px dashed var(--line); border-radius:12px;
+}
+.cart-empty .btn{ margin-top:8px }
+
+/* ========== Cart page: checkout form ========== */
+.cart-checkout{
+  margin-top:16px; padding:14px; border:1px solid var(--line); border-radius:12px;
+  background:linear-gradient(180deg,#151515,#0f0f0f);
+}
+.cart-checkout h3{
+  margin:0 0 10px; font-family:"Bebas Neue",system-ui,sans-serif; letter-spacing:.6px; color:var(--gold);
+}
+.cart-checkout .row{ display:grid; gap:8px; grid-template-columns:1fr }
+.cart-checkout label{ font-size:13px; color:var(--muted) }
+.cart-checkout input, .cart-checkout textarea{
+  width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+  background:#0f0f0f; color:#e6e6e6; font-size:14px;
+}
+.cart-checkout textarea{ min-height:88px; resize:vertical }
+.cart-checkout .actions{ margin-top:10px; display:flex; gap:8px; justify-content:flex-end }
