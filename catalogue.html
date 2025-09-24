@@ -40,28 +40,29 @@
   <p class="muted">Preview upcoming releases. Filters are ready for launch.</p>
 </section>
 <section class="filters container">
-  <div class="filter-row">
-    <label>Category
-      <select id="filter-category">
-        <option value="">All</option><option>OG</option><option>Cookies/Cake</option><option>Candy</option><option>Gas</option>
-      </select>
-    </label>
+  <div class="filter-row" style="display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 16px">
     <label>Seed Type
-      <select id="filter-type">
-        <option value="">All</option><option>Regular</option><option>Feminized</option>
+      <select id="filter-type" class="bv-select">
+        <option value="">All</option>
+        <option value="Feminized">Feminized</option>
+        <option value="Regular">Regular</option>
       </select>
     </label>
-    <label>Availability
-      <select id="filter-availability">
-        <option value="">All</option><option>Available</option><option>Coming Soon</option>
+
+    <label>Price
+      <select id="sort-price" class="bv-select">
+        <option value="">No sort</option>
+        <option value="asc">Low → High</option>
+        <option value="desc">High → Low</option>
       </select>
     </label>
-    <input id="search" type="search" placeholder="Search strain name or lineage…">
   </div>
 </section>
-<section class="catalogue container">
+
+<section class="catalogue container" style="margin-top:10px">
   <div id="catalogue-grid"></div>
 </section>
+
 
 <footer class="site-footer">
   <div class="container">
