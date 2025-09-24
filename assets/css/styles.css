@@ -550,3 +550,6 @@ a{color:var(--gold)}
 }
 /* Show cart counter chip in the header on all pages */
 .bv-cartchip{ display:flex !important; align-items:center; gap:6px }
+
+/* Hide header cart chip again (we only use the Cart tab badge) */
+.bv-cartchip{ display:none !important }
