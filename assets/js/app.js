@@ -91,23 +91,58 @@ function updateQty(id, qty){
 }
 document.addEventListener('DOMContentLoaded', updateCartBubbles);
 
-/* ===================== CATALOGUE RENDER ===================== */
 function renderCatalogue(){
   const grid = document.getElementById('catalogue-grid') || document.querySelector('[data-grid]');
   if(!grid) return;
 
-  grid.innerHTML = PRODUCTS.map(buildCard).join('');
+  // Controls
+  const typeSel = document.getElementById('filter-type');
+  const sortSel = document.getElementById('sort-price');
 
-  // Details -> existing modal
-  grid.querySelectorAll('[data-info]').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const id = el.getAttribute('data-info');
-      const prod = PRODUCTS.find(p=>p.id===id);
-      if(prod) openProductModal(prod);
+  // Read values
+  const typeVal = (typeSel?.value || '').trim();   // "" | "Feminized" | "Regular"
+  const sortVal = (sortSel?.value || '').trim();   // "" | "asc" | "desc"
+
+  // Filter by Seed Type only
+  let items = PRODUCTS.filter(p => !typeVal || p.type === typeVal);
+
+  // Sort by price (nulls go to the end either way)
+  if (sortVal === 'asc'){
+    items.sort((a,b)=>{
+      const pa = (a.price==null ? Infinity : +a.price);
+      const pb = (b.price==null ? Infinity : +b.price);
+      return pa - pb;
+    });
+  } else if (sortVal === 'desc'){
+    items.sort((a,b)=>{
+      const pa = (a.price==null ? -1 : +a.price);
+      const pb = (b.price==null ? -1 : +b.price);
+      return pb - pa;
+    });
+  }
+
+  // Render
+  grid.innerHTML = items.map(buildCard).join('');
+
+  // Hook up Add buttons (Details is a plain link now)
+  grid.querySelectorAll('[data-add]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
+      if(prod && prod.available){
+        openPackModal(prod);
+      }
     });
   });
 }
+
+// re-render when filters change
+['filter-type','sort-price'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('change', renderCatalogue);
+});
+
 document.addEventListener('DOMContentLoaded', renderCatalogue);
+
 
 /* ====================== FEATURED (Home) ===================== */
 function renderFeatured(){
