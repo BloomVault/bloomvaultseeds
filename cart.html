@@ -38,9 +38,34 @@
 
 <section class="container">
   <h1 class="page-title">Your Cart</h1>
-  <div id="cart-view"></div>
-  <div id="cart-empty" class="card" style="display:none">
-    <p>Your cart is empty. Visit the <a href="catalogue.html">Seed Catalogue</a> to add items.</p>
+
+  <!-- Cart items will render here -->
+  <div data-cart-root></div>
+
+  <!-- Empty cart prompt -->
+  <div class="cart-empty" data-cart-empty style="display:none">
+    <p>Your cart is empty. Visit the catalogue to add items.</p>
+    <a class="btn" href="catalogue.html">View Seed Catalogue</a>
+  </div>
+
+  <!-- Checkout form -->
+  <div class="cart-checkout" data-cart-checkout style="display:none">
+    <h3>Checkout</h3>
+    <div class="row">
+      <label for="order-name">Name</label>
+      <input id="order-name" type="text" placeholder="Your full name">
+
+      <label for="order-email">Email</label>
+      <input id="order-email" type="email" placeholder="you@example.com">
+
+      <label for="order-address">Shipping Address</label>
+      <textarea id="order-address" placeholder="Street, City, State, ZIP"></textarea>
+    </div>
+    <div class="actions">
+      <button class="btn" data-continue>Continue Shopping</button>
+      <button class="btn btn-primary" data-cart-submit>Submit Order</button>
+    </div>
+    <small class="muted" id="cart-submit-msg"></small>
   </div>
 </section>
 
