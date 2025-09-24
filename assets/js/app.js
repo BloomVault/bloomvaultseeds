@@ -4,6 +4,26 @@
 
 /* ===================== PRODUCTS ===================== */
 const PRODUCTS = Array.from({length: 12}).map((_, i) => ({
+   /* === Replace first placeholder with: Chimera #3 × Animal Cookies === */
+Object.assign(PRODUCTS[0], {
+  id: 'chimera3-animal-cookies',
+  name: 'Chimera #3 × Animal Cookies',
+  img: 'assets/img/strains/chimera-cookies.png',
+  available: true,            // shows the Add (pack) button
+  type: 'Feminized',          // adjust if you prefer Regular
+  price: null,                // keeps card showing “—”; set a number later to show a price
+  lineage: 'Chimera #3 × Animal Cookies',
+  flavors: 'Sweet dough, vanilla, cocoa, berry, light gas',
+  flower_type: 'Photoperiod',
+  notes: [
+    'Cookies-forward nose: warm bakery dough with vanilla-cocoa; berry top notes; subtle fuel.',
+    'Dense, resin-heavy flowers with classic Cookies structure; medium internodes.',
+    'Medium stretch; responds well to topping, LST, and SCROG.',
+    '8–9 week indoor finish typical for Cookies-heavy hybrids (dial by phenotype).',
+    'Balanced vigor; quality-first selection aimed at bag appeal and terp intensity.'
+  ].join(' ')
+});
+
   id: `bv-coming-${i+1}`,
   name: `BloomVault Drop ${String(i+1).padStart(2, '0')}`,
   category: ['OG','Cookies/Cake','Candy','Gas'][i % 4],   // not shown on cards anymore
