@@ -2,6 +2,41 @@
    BloomVault – App JS (tabs, ribbon, catalogue, cart)
    ========================================================= */
 
+/* ===================== PRODUCTS ===================== */
+const PRODUCTS = Array.from({length: 12}).map((_, i) => ({
+  id: `bv-coming-${i+1}`,
+  name: `BloomVault Drop ${String(i+1).padStart(2, '0')}`,
+  category: ['OG','Cookies/Cake','Candy','Gas'][i % 4],
+  type: (i % 2 === 0) ? 'Regular' : 'Feminized',
+  available: false,   // flip to true when you want to sell it
+  img: null,          // set to "assets/img/mystrain.jpg" later
+  price: null,        // optional, stays "—" unless you set
+  lineage: '—',
+  notes: 'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
+}));
+
+/* Build each strain card (image or COMING SOON + Details + Add) */
+function buildCard(p){
+  const hasImg = !!p.img;
+  return `
+    <div class="bv-card" data-id="${p.id}">
+      <div class="card-image">
+        ${hasImg ? `<img src="${p.img}" alt="${p.name}">` : `<div class="coming-soon">COMING SOON</div>`}
+      </div>
+      <div class="card-body">
+        <h3 class="strain-name">${p.name}</h3>
+        <div class="ph-sub">${p.category} • ${p.type}</div>
+        <div class="card-cta">
+          <button class="btn" type="button" data-info="${p.id}">Details</button>
+          <button class="btn" type="button" data-add="${p.id}" ${p.available ? '' : 'disabled'}>
+            ${p.available ? 'Add' : 'Coming Soon'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 /* ---------- Active link highlight (tabs-only) ---------- */
 (function(){
   function isSamePage(href){
@@ -53,47 +88,17 @@ function updateQty(id, qty){
 }
 document.addEventListener('DOMContentLoaded', updateCartBubbles);
 
-/* ===================== PRODUCT PLACEHOLDERS ===================== */
-const PRODUCTS = Array.from({length:12}).map((_,i)=>({
-  id:`bv-coming-${i+1}`,
-  name:`BloomVault Drop ${String(i+1).padStart(2,'0')}`,
-  category:['OG','Cookies/Cake','Candy','Gas'][i%4],
-  type:(i%2===0)?'Regular':'Feminized',
-  available:false,
-  price:null,
-  lineage:'—',
-  notes:'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
-}));
-
-function placeholderCardHTML(p){
-  return `
-    <div class="bv-card placeholder" data-id="${p.id}">
-      <div class="ph-card-visual" data-info="${p.id}">
-        <span class="ph-pill">COMING&nbsp;SOON</span>
-        <div class="ph-mark">BV</div>
-      </div>
-      <div class="ph-body">
-        <div class="ph-name">${p.name}</div>
-        <div class="ph-sub">${p.category} • ${p.type}</div>
-        <div class="ph-actions">
-          <button class="btn" type="button" data-info="${p.id}">View Details</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
 /* ===================== CATALOGUE RENDER ===================== */
 function renderCatalogue(){
   const grid = document.getElementById('catalogue-grid') || document.querySelector('[data-grid]');
   if(!grid) return;
 
-  const items = PRODUCTS;
-  grid.innerHTML = items.map(placeholderCardHTML).join('');
+  grid.innerHTML = PRODUCTS.map(buildCard).join('');
 
-  grid.querySelectorAll('[data-info], .bv-card.placeholder').forEach(el=>{
-    el.addEventListener('click', (e)=>{
-      const id = e.currentTarget.getAttribute('data-info') || e.currentTarget.getAttribute('data-id');
+  // Details -> existing modal
+  grid.querySelectorAll('[data-info]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = el.getAttribute('data-info');
       const prod = PRODUCTS.find(p=>p.id===id);
       if(prod) openProductModal(prod);
     });
@@ -106,11 +111,11 @@ function renderFeatured(){
   const grid = document.getElementById('featured-grid');
   if(!grid) return;
   const picks = PRODUCTS.slice(0,3);
-  grid.innerHTML = picks.map(placeholderCardHTML).join('');
+  grid.innerHTML = picks.map(buildCard).join('');
 
-  grid.querySelectorAll('[data-info], .bv-card.placeholder').forEach(el=>{
-    el.addEventListener('click', (e)=>{
-      const id = e.currentTarget.getAttribute('data-info') || e.currentTarget.getAttribute('data-id');
+  grid.querySelectorAll('[data-info]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = el.getAttribute('data-info');
       const prod = PRODUCTS.find(p=>p.id===id);
       if(prod) openProductModal(prod);
     });
@@ -172,7 +177,7 @@ function renderCart(){
       <div class="top">
         <div>
           <div class="bv-title">${i.name}</div>
-          <div class="bv-meta">ID: ${i.id}</div>
+          <div class="bv-meta">ID: ${i.id}${i.pack ? ` • Pack: ${i.pack}` : ''}</div>
         </div>
         <button class="bv-btn" data-remove="${i.id}">Remove</button>
       </div>
@@ -195,6 +200,74 @@ function renderCart(){
   const total = items.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
   document.querySelector('[data-total]')?.replaceChildren(document.createTextNode(`$${total.toFixed(2)}`));
 }
+
+/* ===== Pack size chooser modal ===== */
+(function(){
+  if (document.getElementById('pack-modal-backdrop')) return;
+  const wrap = document.createElement('div');
+  wrap.id = 'pack-modal-backdrop';
+  wrap.innerHTML = `
+    <div id="pack-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <h3>Select Pack Size</h3>
+      <div class="muted">Choose the number of seeds for <span id="pack-prod-name"></span>.</div>
+      <div class="choices">
+        <button data-pack="3">3 Seeds</button>
+        <button data-pack="7">7 Seeds</button>
+        <button data-pack="12">12 Seeds</button>
+      </div>
+      <div class="row-end">
+        <button class="btn" type="button" data-pack-cancel>Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+
+  wrap.addEventListener('click', e => { if(e.target === wrap) closePackModal(); });
+  wrap.querySelector('[data-pack-cancel]')?.addEventListener('click', closePackModal);
+})();
+
+let PACK_MODAL_PRODUCT = null;
+
+function openPackModal(prod){
+  PACK_MODAL_PRODUCT = prod;
+  const nameEl = document.getElementById('pack-prod-name');
+  if(nameEl) nameEl.textContent = prod?.name || '';
+  const bd = document.getElementById('pack-modal-backdrop');
+  if(bd){ bd.setAttribute('data-show','1'); }
+}
+function closePackModal(){
+  const bd = document.getElementById('pack-modal-backdrop');
+  if(bd){ bd.removeAttribute('data-show'); }
+  PACK_MODAL_PRODUCT = null;
+}
+
+/* Hook into Add buttons + pack choices */
+document.addEventListener('click', (e)=>{
+  const addBtn = e.target.closest('[data-add]');
+  if(addBtn){
+    const prod = PRODUCTS.find(p=> p.id === addBtn.getAttribute('data-add'));
+    if(prod && prod.available){
+      openPackModal(prod);
+    }
+  }
+
+  const choose = e.target.closest('#pack-modal .choices [data-pack]');
+  if(choose && PACK_MODAL_PRODUCT){
+    const pack = +choose.getAttribute('data-pack');
+    const variantId = `${PACK_MODAL_PRODUCT.id}-p${pack}`;
+    const displayName = `${PACK_MODAL_PRODUCT.name} — ${pack} Seeds`;
+
+    addToCart({
+      id: variantId,
+      name: displayName,
+      price: PACK_MODAL_PRODUCT.price, // stays null (—) unless you set pricing
+      qty: 1,
+      pack
+    });
+
+    closePackModal();
+  }
+});
 
 /* ===== Seed Rain Banner ===== */
 (function(){
