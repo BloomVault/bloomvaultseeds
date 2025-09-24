@@ -7,68 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css"
-</head>
-<body>
-<header class="bv-header">
-  <div class="bv-wrap">
-    <div class="bv-logo">
-      <a class="brand" href="index.html" aria-label="BloomVault Farms">
-        <img src="assets/img/logo.png" alt="BloomVault Farms">
-      </a>
-    </div>
-  </div>
-  <nav class="bv-tabs" aria-label="Primary">
-    <a href="index.html">Home</a>
-    <a href="catalogue.html">Seed Catalogue</a>
-    <a href="about.html">About</a>
-    <a href="compliance.html">Compliance &amp; FAQ</a>
-    <a href="cart.html">Cart <span class="tab-badge" data-cart-tab-count>0</span></a>
-  </nav>
-</header>
-
-<div id="seed-rain-banner" aria-hidden="true"></div>
-
-<section class="container">
-  <h1 class="page-title" id="strain-title">Strain</h1>
-  <div class="card" id="strain-card" style="display:grid;gap:10px">
-    <img src="assets/img/locked.png" alt="" style="width:180px;opacity:.92;filter:drop-shadow(0 0 8px rgba(211,176,98,.25))">
-    <div class="muted" id="strain-meta"></div>
-    <p id="strain-notes"></p>
-  </div>
-</section>
-
-<footer class="site-footer">
-  <div class="container">
-    <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
-  </div>
-</footer>
-
-<!-- EmailJS + app -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script> emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" }); </script>
-<script defer src="assets/js/app.js?v=6"></script>
-<script>
-  // Light details loader (reuses PRODUCTS from app.js)
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const params = new URLSearchParams(location.search);
-    const id = params.get('id');
-    const p = (window.PRODUCTS || []).find(x=> x.id === id) || (window.PRODUCTS||[])[0];
-    if(!p) return;
-    document.getElementById('strain-title').textContent = p.name;
-    document.getElementById('strain-meta').textContent  = `${p.category} • ${p.type} • ${p.available ? 'Available' : 'Coming Soon'}`;
-    document.getElementById('strain-notes').textContent = p.notes || '—';
-  });
-</script>
-  <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Home · BloomVault Farms</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -79,10 +17,9 @@
         <img src="assets/img/logo.png" alt="BloomVault Farms">
       </a>
     </div>
+    <!-- (chip stays hidden by CSS) -->
     <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
   </div>
-
-  <!-- TABS (no hamburger) -->
   <nav class="bv-tabs" aria-label="Primary">
     <a href="index.html">Home</a>
     <a href="catalogue.html">Seed Catalogue</a>
@@ -92,43 +29,48 @@
   </nav>
 </header>
 
-<!-- Seed Rain Banner sits directly under the tabs -->
 <div id="seed-rain-banner" aria-hidden="true"></div>
 
-<section class="hero">
-  <div class="container hero-inner">
-    <h1 class="hero-title">Premium Cannabis Genetics, Secured in the Vault</h1>
-    <p class="hero-sub">Black & gold with silver hints. Clean pro catalogue. Brand new lineup coming soon.</p>
-    <div class="hero-ctas">
-      <a class="btn btn-primary" href="catalogue.html">Seed Catalogue</a>
-      <a class="btn" href="#subscribe">Join Drop List</a>
+<section class="container" style="margin-top:14px">
+  <h1 class="page-title" id="s-title">Strain</h1>
+  <div class="bv-card" style="display:grid; grid-template-columns: 1fr; gap:12px; padding-bottom:10px">
+    <div class="card-image" id="s-image" style="max-width:460px; margin:0 auto 6px">
+      <div class="coming-soon">COMING SOON</div>
+    </div>
+    <div class="card-body" id="s-body">
+      <div class="ph-sub" id="s-availability"></div>
+      <div class="ph-sub" id="s-price" style="margin:6px 0 10px">Price: —</div>
+
+      <div class="grid-2" style="display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))">
+        <div class="card" style="padding:10px">
+          <strong>Seed Type:</strong>
+          <div id="s-type" class="muted">—</div>
+        </div>
+        <div class="card" style="padding:10px">
+          <strong>Flower Type:</strong>
+          <div id="s-flower" class="muted">—</div>
+        </div>
+        <div class="card" style="padding:10px">
+          <strong>Flavors:</strong>
+          <div id="s-flavors" class="muted">—</div>
+        </div>
+        <div class="card" style="padding:10px">
+          <strong>Lineage:</strong>
+          <div id="s-lineage" class="muted">—</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:10px; margin-top:10px">
+        <strong>Notes</strong>
+        <p id="s-notes" class="muted" style="margin:6px 0 0">—</p>
+      </div>
+
+      <div class="card-cta" style="margin-top:10px; display:flex; gap:8px">
+        <a class="btn" href="catalogue.html">Back to Catalogue</a>
+        <button class="btn" type="button" id="s-add-btn" disabled>Add</button>
+      </div>
     </div>
   </div>
-</section>
-
-<section class="features container">
-  <div class="grid-3">
-    <div class="card"><h3>Meticulous Selection</h3><p>Vigor, structure, and standout terpene expression lead every cross.</p></div>
-    <div class="card"><h3>Vault-Grade Consistency</h3><p>Batch IDs and transparent notes so you know what you're getting.</p></div>
-    <div class="card"><h3>Collector-Worthy Drops</h3><p>Limited runs with clear categories for the strains you chase.</p></div>
-  </div>
-</section>
-
-<section class="featured container">
-  <div class="section-head">
-    <h2>Featured (Coming Soon)</h2>
-    <a class="link" href="catalogue.html">View All</a>
-  </div>
-  <div id="featured-grid" class="grid-3"></div>
-</section>
-
-<section id="subscribe" class="subscribe container">
-  <h2>Get First Dibs on Drops</h2>
-  <form id="subscribe-form" class="subscribe-form">
-    <input type="email" id="subscribe-email" placeholder="you@example.com" required>
-    <button class="btn btn-primary" type="submit">Subscribe</button>
-    <small id="subscribe-msg" class="muted"></small>
-  </form>
 </section>
 
 <footer class="site-footer">
@@ -137,21 +79,52 @@
   </div>
 </footer>
 
-<!-- Compliance notice at bottom -->
-<div class="compliance-ribbon">
-  Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
-</div>
-
-<!-- EmailJS (must load before app.js) -->
+<!-- EmailJS and app -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script> emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" }); </script>
+<script defer src="assets/js/app.js?v=8"></script>
+
 <script>
-  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
+  // Populate details from PRODUCTS
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const p = (window.PRODUCTS || Array.from({length:0})).find(x=> x.id === id);
+
+    if(!p){
+      document.getElementById('s-title').textContent = 'Strain Not Found';
+      return;
+    }
+
+    document.getElementById('s-title').textContent = p.name;
+    document.getElementById('s-type').textContent = p.type || '—';
+    document.getElementById('s-flavors').textContent = p.flavors || '—';
+    document.getElementById('s-flower').textContent = p.flower_type || '—';
+    document.getElementById('s-lineage').textContent = p.lineage || '—';
+    document.getElementById('s-notes').textContent = p.notes || '—';
+
+    const availEl = document.getElementById('s-availability');
+    availEl.textContent = p.available ? 'Available' : 'Coming Soon';
+
+    const priceText = (p.price == null) ? '—' : '$' + Number(p.price).toFixed(2);
+    document.getElementById('s-price').textContent = 'Price: ' + priceText;
+
+    // Image or COMING SOON
+    const imgWrap = document.getElementById('s-image');
+    if (p.img){
+      imgWrap.innerHTML = `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">`;
+    }
+
+    // Add button (pack chooser)
+    const addBtn = document.getElementById('s-add-btn');
+    if(p.available){
+      addBtn.disabled = false;
+      addBtn.addEventListener('click', ()=>{
+        // use the same modal from app.js
+        if (typeof openPackModal === 'function') openPackModal(p);
+      });
+    }
+  });
 </script>
-
-<!-- Main app JS (cache-busted) -->
-<script defer src="assets/js/app.js?v=7"></script>
-</body>
-</html>
-
 </body>
 </html>
