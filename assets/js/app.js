@@ -15,9 +15,10 @@ const PRODUCTS = Array.from({length: 12}).map((_, i) => ({
   notes: 'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
 }));
 
-/* Build each strain card (image or COMING SOON + Details + Add) */
+/* Build each strain card (image or COMING SOON + Details link + Add) */
 function buildCard(p){
   const hasImg = !!p.img;
+  const priceText = (p.price == null) ? '—' : `$${Number(p.price).toFixed(2)}`;
   return `
     <div class="bv-card" data-id="${p.id}">
       <div class="card-image">
@@ -25,9 +26,10 @@ function buildCard(p){
       </div>
       <div class="card-body">
         <h3 class="strain-name">${p.name}</h3>
-        <div class="ph-sub">${p.category} • ${p.type}</div>
+        <!-- removed category text under each strain -->
+        <div class="ph-sub" style="margin:4px 0 8px">Price: ${priceText}</div>
         <div class="card-cta">
-          <button class="btn" type="button" data-info="${p.id}">Details</button>
+          <a class="btn" href="strain.html?id=${encodeURIComponent(p.id)}">Details</a>
           <button class="btn" type="button" data-add="${p.id}" ${p.available ? '' : 'disabled'}>
             ${p.available ? 'Add' : 'Coming Soon'}
           </button>
@@ -36,6 +38,7 @@ function buildCard(p){
     </div>
   `;
 }
+
 
 /* ---------- Active link highlight (tabs-only) ---------- */
 (function(){
