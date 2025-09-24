@@ -43,6 +43,7 @@
     </div>
   </div>
 </section>
+
 <section class="features container">
   <div class="grid-3">
     <div class="card"><h3>Meticulous Selection</h3><p>Vigor, structure, and standout terpene expression lead every cross.</p></div>
@@ -50,6 +51,7 @@
     <div class="card"><h3>Collector-Worthy Drops</h3><p>Limited runs with clear categories for the strains you chase.</p></div>
   </div>
 </section>
+
 <section class="featured container">
   <div class="section-head">
     <h2>Featured (Coming Soon)</h2>
@@ -57,6 +59,7 @@
   </div>
   <div id="featured-grid" class="grid-3"></div>
 </section>
+
 <section id="subscribe" class="subscribe container">
   <h2>Get First Dibs on Drops</h2>
   <form id="subscribe-form" class="subscribe-form">
@@ -71,31 +74,20 @@
     <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
   </div>
 </footer>
-  <div class="compliance-ribbon">
+
+<!-- Compliance notice at bottom -->
+<div class="compliance-ribbon">
   Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
 </div>
 
-
-<!-- ✅ Scripts moved here -->
-<!-- Load EmailJS first -->
+<!-- EmailJS (must load before app.js) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
 </script>
 
-<!-- Then load your main app logic -->
-<script defer src="assets/js/app.js"></script>
-
-  <!-- Load EmailJS first -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
-</script>
-
-<!-- Then load your main app logic -->
-<script defer src="assets/js/app.js?v=5"></script>
+<!-- Main app JS (cache-busted) -->
+<script defer src="assets/js/app.js?v=7"></script>
 </body>
 </html>
 
-</body>
-</html>
