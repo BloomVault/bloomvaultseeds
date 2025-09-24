@@ -488,3 +488,63 @@ a{color:var(--gold)}
 }
 .cart-checkout textarea{ min-height:88px; resize:vertical }
 .cart-checkout .actions{ margin-top:10px; display:flex; gap:8px; justify-content:flex-end }
+
+/* ===== Card: image or COMING SOON placeholder ===== */
+.bv-card .card-image{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  border: 2px solid var(--gold);
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 50% 30%, rgba(211,176,98,.10), transparent 60%),
+    linear-gradient(180deg, #151515, #0f0f0f);
+  display: grid; place-items: center;
+}
+.bv-card .card-image img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.bv-card .coming-soon{
+  font-family:"Bebas Neue",system-ui,sans-serif;
+  font-size:28px; letter-spacing:1px; color:#ececec;
+  text-shadow: 0 0 1px #fff, 0 0 18px rgba(211,176,98,.25);
+}
+
+/* Card body bits */
+.bv-card .card-body{ text-align:center; padding:10px 8px 12px }
+.bv-card .strain-name{ font-size:18px; margin:2px 0 6px }
+.bv-card .card-cta{ display:flex; justify-content:center; gap:8px }
+.bv-card .btn[disabled]{ opacity:.5; cursor:not-allowed }
+
+/* ===== Pack size chooser modal ===== */
+#pack-modal-backdrop{
+  position: fixed; inset: 0; z-index: 70;
+  background: rgba(0,0,0,.55);
+  display: none;
+}
+#pack-modal-backdrop[data-show="1"]{ display: grid; place-items: center; }
+#pack-modal{
+  width:min(520px, 92vw);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg,#151515,#0f0f0f);
+  box-shadow: 0 10px 30px rgba(0,0,0,.5);
+  padding: 16px;
+}
+#pack-modal h3{
+  margin: 0 0 8px;
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  letter-spacing: .6px;
+  color: var(--gold);
+}
+#pack-modal .muted{ color: var(--muted); margin-bottom: 12px; }
+#pack-modal .choices{ display:flex; gap:8px; flex-wrap:wrap }
+#pack-modal .choices button{
+  padding:10px 14px; border-radius:12px; border:1px solid #3a2b0c;
+  background:linear-gradient(180deg,#e1c37a,#ae7e1e); color:#111; font-weight:800; cursor:pointer;
+}
+#pack-modal .row-end{ margin-top: 12px; display:flex; justify-content:flex-end; gap:8px }
+#pack-modal .row-end .btn{
+  padding:8px 12px; border-radius:12px; border:1px solid var(--line); background:#131313; color:#ddd; cursor:pointer;
+}
