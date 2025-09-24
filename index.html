@@ -83,5 +83,17 @@
 
 <!-- Then load your main app logic -->
 <script defer src="assets/js/app.js"></script>
+
+  <!-- Load EmailJS first -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
+</script>
+
+<!-- Then load your main app logic -->
+<script defer src="assets/js/app.js?v=5"></script>
+</body>
+</html>
+
 </body>
 </html>
