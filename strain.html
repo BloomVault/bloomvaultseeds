@@ -3,44 +3,62 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Strain Detail · BloomVault Farms</title>
+  <title>Strain · BloomVault Farms</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
-  <script defer src="assets/js/app.js"></script>
 </head>
 <body>
-<header class="site-header">
-  <div class="container flex between center-v">
-    <button class="hamburger" id="hamburger" aria-label="Open Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <a class="brand" href="index.html">
-      <img src="assets/img/logo.png" alt="BloomVault Farms" class="logo">
-    </a>
-    <a href="cart.html" class="cart-link">Cart <span id="cart-count" class="cart-count">0</span></a>
+<header class="bv-header">
+  <div class="bv-wrap">
+    <div class="bv-logo">
+      <a class="brand" href="index.html" aria-label="BloomVault Farms">
+        <img src="assets/img/logo.png" alt="BloomVault Farms">
+      </a>
+    </div>
   </div>
-  <nav class="bv-drawer" aria-label="Primary">
-  <div class="drawer-logo">
-    <img src="assets/img/logo.png" alt="BloomVault Logo">
-  </div>
-  <a href="index.html">Home</a>
-  <a href="catalogue.html">Seed Catalogue</a>
-  <a href="about.html">About</a>
-  <a href="compliance.html">Compliance & FAQ</a>
-  <a href="cart.html">Cart <span class="bv-badge" data-cart-count>0</span></a>
-  <div class="bv-drawer-closearea" data-closearea></div>
-</nav>
+  <nav class="bv-tabs" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="catalogue.html">Seed Catalogue</a>
+    <a href="about.html">About</a>
+    <a href="compliance.html">Compliance &amp; FAQ</a>
+    <a href="cart.html">Cart <span class="tab-badge" data-cart-tab-count>0</span></a>
+  </nav>
 </header>
-<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
 
-<section class="container"><div id="strain-detail" class="strain-detail"></div></section>
+<div id="seed-rain-banner" aria-hidden="true"></div>
+
+<section class="container">
+  <h1 class="page-title" id="strain-title">Strain</h1>
+  <div class="card" id="strain-card" style="display:grid;gap:10px">
+    <img src="assets/img/locked.png" alt="" style="width:180px;opacity:.92;filter:drop-shadow(0 0 8px rgba(211,176,98,.25))">
+    <div class="muted" id="strain-meta"></div>
+    <p id="strain-notes"></p>
+  </div>
+</section>
 
 <footer class="site-footer">
   <div class="container">
     <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
   </div>
 </footer>
+
+<!-- EmailJS + app -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script> emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" }); </script>
+<script defer src="assets/js/app.js?v=6"></script>
+<script>
+  // Light details loader (reuses PRODUCTS from app.js)
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const p = (window.PRODUCTS || []).find(x=> x.id === id) || (window.PRODUCTS||[])[0];
+    if(!p) return;
+    document.getElementById('strain-title').textContent = p.name;
+    document.getElementById('strain-meta').textContent  = `${p.category} • ${p.type} • ${p.available ? 'Available' : 'Coming Soon'}`;
+    document.getElementById('strain-notes').textContent = p.notes || '—';
+  });
+</script>
 </body>
 </html>
