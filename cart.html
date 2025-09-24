@@ -9,17 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-  <!-- EmailJS (must load before app.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
-</script>
-
-<!-- Your main JS (after EmailJS). Cache-busted with ?v=7 -->
-<script defer src="assets/js/app.js?v=7"></script>
-</body>
-</html>
-
 <body>
 <header class="bv-header">
   <div class="bv-wrap">
@@ -84,5 +73,16 @@
     <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
   </div>
 </footer>
+  <!-- EmailJS (must load before app.js) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
+</script>
+
+<!-- Your main JS (after EmailJS). Cache-busted with ?v=7 -->
+<script defer src="assets/js/app.js?v=7"></script>
+</body>
+</html>
+
 </body>
 </html>
