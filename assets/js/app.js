@@ -17,21 +17,12 @@
   });
 })();
 
-/* ---------- Compliance ribbon on scroll (supports old/new class) ---------- */
+/* ---------- Compliance ribbon on scroll ---------- */
 (function(){
   const ribbon = document.querySelector('.bv-ribbon') || document.querySelector('.compliance-ribbon');
   if(!ribbon) return;
 
-  const show = ()=> {
-    if ('show' in ribbon.dataset) ribbon.dataset.show = '1';
-    ribbon.style.display = 'block';
-  };
-  const hide = ()=> {
-    if ('show' in ribbon.dataset) ribbon.dataset.show = '0';
-    ribbon.style.display = 'none';
-  };
-
-  const onScroll = ()=> (window.scrollY > 300 ? show() : hide());
+  const onScroll = ()=> (window.scrollY > 300 ? ribbon.setAttribute('data-show','1') : ribbon.setAttribute('data-show','0'));
   onScroll();
   window.addEventListener('scroll', onScroll, {passive:true});
 })();
@@ -60,7 +51,6 @@ function updateQty(id, qty){
     updateCartBubbles();
   }
 }
-
 document.addEventListener('DOMContentLoaded', updateCartBubbles);
 
 /* ===================== PRODUCT PLACEHOLDERS ===================== */
@@ -70,12 +60,11 @@ const PRODUCTS = Array.from({length:12}).map((_,i)=>({
   category:['OG','Cookies/Cake','Candy','Gas'][i%4],
   type:(i%2===0)?'Regular':'Feminized',
   available:false,
-  price:null,           // shows "—"
+  price:null,
   lineage:'—',
   notes:'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
 }));
 
-/* Card template: playing-card style with text underneath */
 function placeholderCardHTML(p){
   return `
     <div class="bv-card placeholder" data-id="${p.id}">
@@ -96,23 +85,12 @@ function placeholderCardHTML(p){
 
 /* ===================== CATALOGUE RENDER ===================== */
 function renderCatalogue(){
-  // Prefer #catalogue-grid (your HTML), fallback to [data-grid] if present
   const grid = document.getElementById('catalogue-grid') || document.querySelector('[data-grid]');
   if(!grid) return;
 
-  const cat = document.querySelector('#filter-category')?.value || 'All';
-  const typ = document.querySelector('#filter-type')?.value || 'All';
-  const avail = document.querySelector('#filter-availability')?.value || 'All';
-
-  const items = PRODUCTS.filter(p =>
-    (cat==='All'||p.category===cat) &&
-    (typ==='All'||p.type===typ) &&
-    (avail==='All'|| (avail==='Available'? p.available : !p.available))
-  );
-
+  const items = PRODUCTS;
   grid.innerHTML = items.map(placeholderCardHTML).join('');
 
-  // Open modal when clicking the card face or the "View Details" button
   grid.querySelectorAll('[data-info], .bv-card.placeholder').forEach(el=>{
     el.addEventListener('click', (e)=>{
       const id = e.currentTarget.getAttribute('data-info') || e.currentTarget.getAttribute('data-id');
@@ -122,73 +100,6 @@ function renderCatalogue(){
   });
 }
 document.addEventListener('DOMContentLoaded', renderCatalogue);
-['filter-category','filter-type','filter-availability'].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el) el.addEventListener('change', renderCatalogue);
-});
-
-/* ======================= CART RENDER ======================== */
-function renderCart(){
-  const root = document.querySelector('[data-cart-root]');
-  if(!root) return;
-  const items = readCart();
-
-  if(!items.length){
-    root.innerHTML = `<p>Your cart is empty. Visit the <a class="bv-link" href="catalogue.html">Seed Catalogue</a> to add items.</p>`;
-    document.querySelector('[data-total]')?.replaceChildren(document.createTextNode('$0.00'));
-    return;
-  }
-
-  root.innerHTML = items.map(i=>`
-    <div class="bv-card">
-      <div class="top">
-        <div>
-          <div class="bv-title">${i.name}</div>
-          <div class="bv-meta">ID: ${i.id}</div>
-        </div>
-        <button class="bv-btn" data-remove="${i.id}">Remove</button>
-      </div>
-      <div class="bv-actions">
-        <div class="bv-meta">Price: ${i.price!=null? `$${i.price.toFixed(2)}` : '—'}</div>
-        <div style="margin-left:auto; display:flex; align-items:center; gap:6px">
-          <label class="bv-meta" for="qty-${i.id}">Qty</label>
-          <input id="qty-${i.id}" type="number" min="1" value="${i.qty}" style="width:74px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
-        </div>
-      </div>
-    </div>
-  `).join('');
-
-  root.querySelectorAll('[data-remove]').forEach(b=> b.addEventListener('click',()=> removeFromCart(b.getAttribute('data-remove'))));
-  items.forEach(i=>{
-    const inp = document.getElementById(`qty-${i.id}`);
-    if(inp) inp.addEventListener('change', ()=> updateQty(i.id, +inp.value));
-  });
-
-  const total = items.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
-  document.querySelector('[data-total]')?.replaceChildren(document.createTextNode(`$${total.toFixed(2)}`));
-}
-
-/* Cart action buttons */
-document.addEventListener('click', (e)=>{
-  const empty = e.target.closest('[data-empty]');
-  if(empty){ e.preventDefault(); writeCart([]); updateCartBubbles(); renderCart(); }
-
-  const shop = e.target.closest('[data-continue]');
-  if(shop){ e.preventDefault(); location.href = 'catalogue.html'; }
-
-  const checkout = e.target.closest('[data-checkout]');
-  if(checkout){
-    e.preventDefault();
-    const items = readCart();
-    if(!items.length) return;
-    const body = encodeURIComponent(
-      `Hi BloomVault,\n\nI’d like to purchase the following:\n\n` +
-      items.map(i=>`• ${i.name} x${i.qty} — ${i.price!=null? `$${(i.price*i.qty).toFixed(2)}` : '—'}`).join('\n') +
-      `\n\nTotal: $${items.reduce((n,i)=>n+(i.price||0)*i.qty,0).toFixed(2)}\n\nName:\nShipping address:\n\nThanks!`
-    );
-    location.href = `mailto:bloomvaultfarms@gmail.com?subject=BloomVault Order&body=${body}`;
-  }
-});
 
 /* ====================== FEATURED (Home) ===================== */
 function renderFeatured(){
@@ -233,107 +144,83 @@ document.addEventListener('DOMContentLoaded', renderFeatured);
   });
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeProductModal(); });
 })();
-
 function openProductModal(prod){
-  const backdrop = document.querySelector('.bv-modal-backdrop');
-  if(!backdrop) return;
-
   document.getElementById('bv-modal-title').textContent = prod.name;
   document.getElementById('bv-modal-meta').textContent = `${prod.category} • ${prod.type} • ${prod.available ? 'Available' : 'Coming Soon'}`;
   document.getElementById('bv-modal-lineage').innerHTML = `<strong>Lineage:</strong> ${prod.lineage || '—'}`;
   document.getElementById('bv-modal-notes').textContent = prod.notes || '—';
-
-  backdrop.setAttribute('data-show', '1');
-  backdrop.setAttribute('aria-hidden','false');
+  document.querySelector('.bv-modal-backdrop').setAttribute('data-show', '1');
 }
-
 function closeProductModal(){
-  const backdrop = document.querySelector('.bv-modal-backdrop');
-  if(!backdrop) return;
-  backdrop.removeAttribute('data-show');
-  backdrop.setAttribute('aria-hidden','true');
+  document.querySelector('.bv-modal-backdrop').removeAttribute('data-show');
 }
 
-/* ===== Seed Rain Banner (custom image with fallback) ===== */
+/* ======================= CART RENDER ======================== */
+function renderCart(){
+  const root = document.querySelector('[data-cart-root]');
+  if(!root) return;
+  const items = readCart();
+
+  if(!items.length){
+    root.innerHTML = `<p>Your cart is empty. Visit the <a class="bv-link" href="catalogue.html">Seed Catalogue</a> to add items.</p>`;
+    document.querySelector('[data-total]')?.replaceChildren(document.createTextNode('$0.00'));
+    return;
+  }
+
+  root.innerHTML = items.map(i=>`
+    <div class="bv-card">
+      <div class="top">
+        <div>
+          <div class="bv-title">${i.name}</div>
+          <div class="bv-meta">ID: ${i.id}</div>
+        </div>
+        <button class="bv-btn" data-remove="${i.id}">Remove</button>
+      </div>
+      <div class="bv-actions">
+        <div class="bv-meta">Price: ${i.price!=null? `$${i.price.toFixed(2)}` : '—'}</div>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px">
+          <label class="bv-meta" for="qty-${i.id}">Qty</label>
+          <input id="qty-${i.id}" type="number" min="1" value="${i.qty}">
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  root.querySelectorAll('[data-remove]').forEach(b=> b.addEventListener('click',()=> removeFromCart(b.getAttribute('data-remove'))));
+  items.forEach(i=>{
+    const inp = document.getElementById(`qty-${i.id}`);
+    if(inp) inp.addEventListener('change', ()=> updateQty(i.id, +inp.value));
+  });
+
+  const total = items.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
+  document.querySelector('[data-total]')?.replaceChildren(document.createTextNode(`$${total.toFixed(2)}`));
+}
+
+/* ===== Seed Rain Banner ===== */
 (function(){
   const banner = document.getElementById('seed-rain-banner');
   if(!banner) return;
-
   const SEED_SRC = 'assets/img/seed.png';
   const FALLBACK_ASPECT = 0.64;
 
   function rand(min, max){ return Math.random() * (max - min) + min; }
 
-  function addSeeds({src, aspect}){
-    const SEED_COUNT   = Math.min(99, Math.max(50, Math.floor(window.innerWidth / 18)));
-    const MIN_SIZE     = 10;
-    const MAX_SIZE     = 30;
-    const MIN_DURATION = 3.5;
-    const MAX_DURATION = 7.8;
-    const MAX_DELAY    = 6.0;
-
-    for(let i=0; i<SEED_COUNT; i++){
-      const el = document.createElement('img');
-      el.className = 'seed';
-      if (Math.random() < 0.45) el.classList.add('small');
-      if (Math.random() < 0.35) el.classList.add('blur');
-      if (Math.random() < 0.60) el.classList.add('spin');
-
-      const size = rand(MIN_SIZE, MAX_SIZE);
-      el.width  = Math.round(size);
-      el.height = Math.round(size * aspect);
-      el.alt = '';
-      el.decoding = 'async';
-      el.src = src;
-
-      const x = rand(0, banner.clientWidth);
-      el.style.left = `${x}px`;
-
-      const drift = (Math.random() < 0.5 ? -1 : 1) * rand(0.4, 1.2);
-      el.style.animationDuration = `${rand(MIN_DURATION, MAX_DURATION)}s`;
-      el.style.animationDelay = `${rand(0, MAX_DELAY)}s`;
-
-      const driftName = `fall-${i}`;
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes ${driftName}{
-          0%   { transform: translateY(-20px) translateX(0); }
-          100% { transform: translateY(${banner.clientHeight + 20}px) translateX(${drift * 18}px); }
-        }
-      `;
-      document.head.appendChild(style);
-      el.style.animationName = el.classList.contains('spin') ? `${driftName}, seed-spin` : driftName;
-
-      el.addEventListener('animationiteration', ()=>{
-        el.style.left = `${rand(0, banner.clientWidth)}px`;
-      });
-
+  function addSeeds(aspect){
+    for(let i=0;i<50;i++){
+      const el=document.createElement('img');
+      el.className='seed';
+      el.src=SEED_SRC; el.alt='';
+      el.width=20; el.height=20*aspect;
+      el.style.left=rand(0,banner.clientWidth)+'px';
+      el.style.animationDuration=rand(3.5,7.8)+'s';
       banner.appendChild(el);
     }
   }
 
-  const probe = new Image();
-  probe.onload = ()=>{
-    const aspect = probe.naturalHeight && probe.naturalWidth
-      ? (probe.naturalHeight / probe.naturalWidth)
-      : FALLBACK_ASPECT;
-    addSeeds({ src: SEED_SRC, aspect });
-  };
-  probe.onerror = ()=>{
-    console.warn('Seed sprite failed to load, using fallback.');
-    addSeeds({ src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 18"><ellipse cx="14" cy="9" rx="12" ry="7.2" fill="#9b835f"/></svg>')}`, aspect: FALLBACK_ASPECT });
-  };
-  probe.src = SEED_SRC;
-
-  let t;
-  window.addEventListener('resize', ()=>{
-    clearTimeout(t);
-    t = setTimeout(()=>{
-      document.querySelectorAll('#seed-rain-banner .seed').forEach(el=>{
-        el.style.left = `${rand(0, banner.clientWidth)}px`;
-      });
-    }, 120);
-  });
+  const probe=new Image();
+  probe.onload=()=> addSeeds(probe.naturalHeight/probe.naturalWidth||FALLBACK_ASPECT);
+  probe.onerror=()=> addSeeds(FALLBACK_ASPECT);
+  probe.src=SEED_SRC;
 })();
 
 /* ===== Subscribe form → EmailJS send ===== */
@@ -345,9 +232,8 @@ function closeProductModal(){
   const msg   = document.getElementById('subscribe-msg');
   const btn   = form.querySelector('button[type="submit"]');
 
-  // Replace with your IDs from EmailJS
-  const SERVICE_ID  = service_5n04n5s;
-  const TEMPLATE_ID = template_5567czh;
+  const SERVICE_ID  = 'service_5n04n5s';
+  const TEMPLATE_ID = 'template_5567czh';
 
   const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
@@ -358,58 +244,6 @@ function closeProductModal(){
     if (!isEmail(email)){
       msg.textContent = 'Please enter a valid email address.';
       msg.style.color = '#f77';
-      input.focus();
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-    msg.textContent = '';
-
-    try{
-      await emailjs.send(service_5n04n5s, template_5567czh, {
-        customer_email: email,
-        page_url: location.href,
-        timestamp: new Date().toISOString()
-      });
-
-      msg.textContent = 'Thanks! You’ll get insider looks at new and exclusive drops before anyone else — watch your email!.';
-      msg.style.color = '';
-      form.reset();
-    }catch(err){
-      console.error(err);
-      msg.textContent = 'Something went wrong. Please try again or email bloomvaultfarms@gmail.com.';
-      msg.style.color = '#f77';
-    }finally{
-      btn.disabled = false;
-      btn.textContent = 'Subscribe';
-    }
-  });
-})();
-
-/* ===== Subscribe form → EmailJS send ===== */
-(function(){
-  const form = document.getElementById('subscribe-form');
-  if (!form || typeof emailjs === 'undefined') return;
-
-  const input = document.getElementById('subscribe-email');
-  const msg   = document.getElementById('subscribe-msg');
-  const btn   = form.querySelector('button[type="submit"]');
-
-  // ✅ Your EmailJS IDs
-  const SERVICE_ID  = 'service_5n04n5s';   // <-- replace with your actual Service ID
-  const TEMPLATE_ID = 'template_5567czh'; // your template ID
-
-  const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
-  form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const email = (input.value || '').trim();
-
-    if (!isEmail(email)){
-      msg.textContent = 'Please enter a valid email address.';
-      msg.style.color = '#f77';
-      input.focus();
       return;
     }
 
@@ -424,12 +258,12 @@ function closeProductModal(){
         timestamp: new Date().toISOString()
       });
 
-      msg.textContent = 'Thanks! You’re on the drop list — watch your inbox.';
+      msg.textContent = 'Thanks! You’re on the drop list.';
       msg.style.color = '';
       form.reset();
     }catch(err){
       console.error(err);
-      msg.textContent = 'Something went wrong. Please try again or email bloomvaultfarms@gmail.com.';
+      msg.textContent = 'Something went wrong. Try again later.';
       msg.style.color = '#f77';
     }finally{
       btn.disabled = false;
