@@ -17,14 +17,14 @@ const PRODUCTS = Array.from({length: 12}).map((_, i) => ({
   notes: 'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
 }));
 
-/* === Replace first placeholder with: Chimera #3 × Animal Cookies === */
+/* === Replace first placeholder with: Chimera #3 × Animal Cookies (+ pack prices) === */
 Object.assign(PRODUCTS[0], {
   id: 'chimera3-animal-cookies',
   name: 'Chimera #3 × Animal Cookies',
   img: 'assets/img/strains/chimera-cookies.png',
   available: true,            // shows the Add (pack) button
   type: 'Feminized',          // adjust if you prefer Regular
-  price: null,                // keeps card showing “—”; set a number later to show a price
+  price: null,                // keep card showing “—”; pack prices used on add
   lineage: 'Chimera #3 × Animal Cookies',
   flavors: 'Sweet dough, vanilla, cocoa, berry, light gas',
   flower_type: 'Photoperiod',
@@ -34,8 +34,13 @@ Object.assign(PRODUCTS[0], {
     'Medium stretch; responds well to topping, LST, and SCROG.',
     '8–9 week indoor finish typical for Cookies-heavy hybrids (dial by phenotype).',
     'Balanced vigor; quality-first selection aimed at bag appeal and terp intensity.'
-  ].join(' ')
+  ].join(' '),
+  // ✅ pack-specific pricing
+  packs: { 3: 10, 7: 22, 12: 45 }
 });
+
+/* Expose to other pages (strain.html) */
+window.PRODUCTS = PRODUCTS;
 
 /* ---------- Active link highlight (tabs-only) ---------- */
 (function(){
@@ -252,10 +257,30 @@ document.addEventListener('DOMContentLoaded', renderCart);
 
 let PACK_MODAL_PRODUCT = null;
 
+function fmtPrice(v){
+  if (v == null || isNaN(v)) return '—';
+  return `$${Number(v).toFixed(2)}`;
+}
+
 function openPackModal(prod){
   PACK_MODAL_PRODUCT = prod;
+
+  // Update title
   const nameEl = document.getElementById('pack-prod-name');
   if(nameEl) nameEl.textContent = prod?.name || '';
+
+  // Update button labels to show prices if defined
+  const modal = document.getElementById('pack-modal');
+  if (modal && prod){
+    ['3','7','12'].forEach(pk=>{
+      const btn = modal.querySelector(`[data-pack="${pk}"]`);
+      if(!btn) return;
+      const priceForPack = prod.packs?.[pk] ?? prod.price;
+      // e.g., "3 Seeds — $10.00" (falls back to "—" if null)
+      btn.textContent = `${pk} Seeds — ${fmtPrice(priceForPack)}`;
+    });
+  }
+
   const bd = document.getElementById('pack-modal-backdrop');
   if(bd){ bd.setAttribute('data-show','1'); }
 }
@@ -281,10 +306,15 @@ document.addEventListener('click', (e)=>{
     const variantId = `${PACK_MODAL_PRODUCT.id}-p${pack}`;
     const displayName = `${PACK_MODAL_PRODUCT.name} — ${pack} Seeds`;
 
+    // ✅ Price comes from packs[pack]; falls back to product price if needed
+    const priceForPack = (PACK_MODAL_PRODUCT.packs && PACK_MODAL_PRODUCT.packs[pack]) != null
+      ? PACK_MODAL_PRODUCT.packs[pack]
+      : PACK_MODAL_PRODUCT.price;
+
     addToCart({
       id: variantId,
       name: displayName,
-      price: PACK_MODAL_PRODUCT.price,
+      price: priceForPack ?? null,
       qty: 1,
       pack
     });
