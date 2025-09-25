@@ -36,7 +36,7 @@ Object.assign(PRODUCTS[0], {
     'Balanced vigor; quality-first selection aimed at bag appeal and terp intensity.'
   ].join(' '),
   // ✅ pack-specific pricing
-  packs: { 3: 10, 7: 22, 12: 45 }
+  packs: { 3: 25, 7: 55, 12: 85 }
 });
 
 /* Expose to other pages (strain.html) */
