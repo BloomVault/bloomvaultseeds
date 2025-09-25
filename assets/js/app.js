@@ -4,7 +4,20 @@
 
 /* ===================== PRODUCTS ===================== */
 const PRODUCTS = Array.from({length: 12}).map((_, i) => ({
-   /* === Replace first placeholder with: Chimera #3 × Animal Cookies === */
+  id: `bv-coming-${i+1}`,
+  name: `BloomVault Drop ${String(i+1).padStart(2, '0')}`,
+  category: ['OG','Cookies/Cake','Candy','Gas'][i % 4],   // not shown on cards anymore
+  type: (i % 2 === 0) ? 'Regular' : 'Feminized',
+  available: false,                 // flip to true when ready
+  img: null,                        // set to "assets/img/mystrain.jpg" when you have images
+  price: null,                      // null shows "—"
+  lineage: '—',
+  flavors: '—',
+  flower_type: '—',                 // e.g., Photoperiod / Auto
+  notes: 'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
+}));
+
+/* === Replace first placeholder with: Chimera #3 × Animal Cookies === */
 Object.assign(PRODUCTS[0], {
   id: 'chimera3-animal-cookies',
   name: 'Chimera #3 × Animal Cookies',
@@ -23,19 +36,6 @@ Object.assign(PRODUCTS[0], {
     'Balanced vigor; quality-first selection aimed at bag appeal and terp intensity.'
   ].join(' ')
 });
-
-  id: `bv-coming-${i+1}`,
-  name: `BloomVault Drop ${String(i+1).padStart(2, '0')}`,
-  category: ['OG','Cookies/Cake','Candy','Gas'][i % 4],   // not shown on cards anymore
-  type: (i % 2 === 0) ? 'Regular' : 'Feminized',
-  available: false,                 // flip to true when ready
-  img: null,                        // set to "assets/img/mystrain.jpg" when you have images
-  price: null,                      // null shows "—"
-  lineage: '—',
-  flavors: '—',
-  flower_type: '—',                 // e.g., Photoperiod / Auto
-  notes: 'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
-}));
 
 /* ---------- Active link highlight (tabs-only) ---------- */
 (function(){
