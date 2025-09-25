@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', renderCatalogue);
 function renderFeatured(){
   const grid = document.getElementById('featured-grid');
   if(!grid) return;
-  const picks = PRODUCTS.slice(0,3);
+  const picks = PRODUCTS.slice(0,2);
   grid.innerHTML = picks.map(buildCard).join('');
 
   grid.querySelectorAll('[data-add]').forEach(btn=>{
