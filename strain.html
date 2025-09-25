@@ -84,13 +84,14 @@
 <!-- EmailJS then app.js (must be in this order) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script> emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" }); </script>
-<script defer src="assets/js/app.js?v=9"></script>
+<script defer src="assets/js/app.js?v=10"></script>
 
 <script>
-  // Fill the page from window.PRODUCTS using ?id=
-  document.addEventListener('DOMContentLoaded', ()=>{
+  // Robustly wait for window.PRODUCTS (set in app.js) before populating
+  function fillFromProducts() {
     const params = new URLSearchParams(location.search);
     const id = params.get('id');
+
     const list = (window.PRODUCTS || []);
     const p = list.find(x => x.id === id);
 
@@ -99,7 +100,8 @@
       return;
     }
 
-    document.getElementById('s-title').textContent = p.name;
+    // Title & basic fields
+    document.getElementById('s-title').textContent = p.name || 'Strain';
     document.getElementById('s-availability').textContent = p.available ? 'Available' : 'Coming Soon';
     document.getElementById('s-price').textContent = 'Price: ' + (p.price == null ? '—' : ('$' + Number(p.price).toFixed(2)));
     document.getElementById('s-type').textContent = p.type || '—';
@@ -108,13 +110,13 @@
     document.getElementById('s-lineage').textContent = p.lineage || '—';
     document.getElementById('s-notes').textContent = p.notes || '—';
 
-    // image
+    // Image (or keep COMING SOON)
     const imgWrap = document.getElementById('s-image');
     if (p.img){
       imgWrap.innerHTML = `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover">`;
     }
 
-    // enable Add (uses the shared pack modal from app.js)
+    // Enable Add (uses shared pack modal from app.js)
     const addBtn = document.getElementById('s-add-btn');
     if(p.available){
       addBtn.disabled = false;
@@ -122,7 +124,20 @@
         if (typeof openPackModal === 'function') openPackModal(p);
       });
     }
-  });
+  }
+
+  // Wait until PRODUCTS is ready (handles race conditions)
+  (function waitForProducts(tries = 0){
+    if (Array.isArray(window.PRODUCTS) && window.PRODUCTS.length){
+      fillFromProducts();
+      return;
+    }
+    if (tries > 60){ // ~3s @ 50ms interval
+      document.getElementById('s-title').textContent = 'Strain';
+      return;
+    }
+    setTimeout(()=> waitForProducts(tries + 1), 50);
+  })();
 </script>
 </body>
 </html>
