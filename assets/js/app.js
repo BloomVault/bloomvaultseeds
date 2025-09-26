@@ -396,3 +396,51 @@ document.addEventListener('click', (e)=>{
     }
   });
 })();
+
+/* ===== Order form → EmailJS send ===== */
+(function(){
+  const form = document.getElementById('order-form');
+  if (!form || typeof emailjs === 'undefined') return;
+
+  const msg = document.getElementById('order-msg');
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+
+    const name = document.getElementById('order-name').value.trim();
+    const email = document.getElementById('order-email').value.trim();
+    const address = document.getElementById('order-address').value.trim();
+    const cart = readCart();
+
+    if(!cart.length){
+      msg.textContent = "Your cart is empty.";
+      msg.style.color = "#f77";
+      return;
+    }
+
+    const cartDetails = cart.map(i =>
+      `${i.name} (Pack: ${i.pack || '-'}, Qty: ${i.qty}) - ${i.price ? '$'+i.price.toFixed(2) : '—'}`
+    ).join('\n');
+
+    try{
+      await emailjs.send("service_5n04n5s","template_sujzntx",{
+        customer_name: name,
+        customer_email: email,
+        customer_address: address,
+        cart_contents: cartDetails,
+        timestamp: new Date().toISOString()
+      });
+
+      msg.textContent = "✅ Order sent! We’ll be in touch soon.";
+      msg.style.color = "";
+      form.reset();
+      writeCart([]); // clear cart
+      renderCart();
+      updateCartBubbles();
+    }catch(err){
+      console.error(err);
+      msg.textContent = "❌ Something went wrong. Try again later.";
+      msg.style.color = "#f77";
+    }
+  });
+})();
