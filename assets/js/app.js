@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', updateCartBubbles);
 /* ===================== Card builder ===================== */
 function buildCard(p){
   const hasImg = !!p.img;
-  const priceText = (p.price == null) ? '—' : `$${Number(p.price).toFixed(2)}`;
   return `
     <div class="bv-card" data-id="${p.id}">
       <div class="card-image">
@@ -107,7 +106,6 @@ function buildCard(p){
       </div>
       <div class="card-body">
         <h3 class="strain-name">${p.name}</h3>
-        <div class="ph-sub" style="margin:4px 0 8px">Price: ${priceText}</div>
         <div class="card-cta">
           <a class="btn" href="strain.html?id=${encodeURIComponent(p.id)}">Details</a>
           <button class="btn" type="button" data-add="${p.id}" ${p.available ? '' : 'disabled'}>
