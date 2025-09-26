@@ -48,24 +48,25 @@
   </div>
 
   <!-- Checkout form -->
-  <div class="cart-checkout" data-cart-checkout style="display:none">
-    <h3>Checkout</h3>
-    <div class="row">
-      <label for="order-name">Name</label>
-      <input id="order-name" type="text" placeholder="Your full name">
+<div data-cart-checkout style="margin-top:20px">
+  <h3>Checkout</h3>
+  <form id="order-form" class="checkout-form">
+    <label>Name</label>
+    <input type="text" id="order-name" required>
+    
+    <label>Email</label>
+    <input type="email" id="order-email" required>
+    
+    <label>Shipping Address</label>
+    <textarea id="order-address" required></textarea>
 
-      <label for="order-email">Email</label>
-      <input id="order-email" type="email" placeholder="you@example.com">
-
-      <label for="order-address">Shipping Address</label>
-      <textarea id="order-address" placeholder="Street, City, State, ZIP"></textarea>
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+      <a class="btn" href="catalogue.html">Continue Shopping</a>
+      <button type="submit" class="btn btn-primary">Submit Order</button>
     </div>
-    <div class="actions">
-      <button class="btn" data-continue>Continue Shopping</button>
-      <button class="btn btn-primary" data-cart-submit>Submit Order</button>
-    </div>
-    <small class="muted" id="cart-submit-msg"></small>
-  </div>
+    <small id="order-msg" class="muted"></small>
+  </form>
+</div>
 </section>
 
 <footer class="site-footer">
