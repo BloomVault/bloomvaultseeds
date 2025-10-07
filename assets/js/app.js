@@ -10,7 +10,7 @@ const PRODUCTS = Array.from({length: 12}).map((_, i) => ({
   type: (i % 2 === 0) ? 'Regular' : 'Feminized',
   available: false,                 // flip to true when ready
   img: null,                        // set to "assets/img/mystrain.jpg" when you have images
-  price: null,                      // null shows "—"
+  price: null,                      // null shows "—" on cards (we price by pack)
   lineage: '—',
   flavors: '—',
   flower_type: '—',                 // e.g., Photoperiod / Auto
@@ -23,7 +23,7 @@ Object.assign(PRODUCTS[0], {
   name: 'Chimera #3 × Animal Cookies',
   img: 'assets/img/strains/chimera-cookies.png',
   available: true,            // shows the Add (pack) button
-  type: 'Feminized',          // adjust if you prefer Regular
+  type: 'Feminized',
   price: null,                // keep card showing “—”; pack prices used on add
   lineage: 'Chimera #3 × Animal Cookies',
   flavors: 'Sweet dough, vanilla, cocoa, berry, light gas',
@@ -35,8 +35,8 @@ Object.assign(PRODUCTS[0], {
     '8–9 week indoor finish typical for Cookies-heavy hybrids (dial by phenotype).',
     'Balanced vigor; quality-first selection aimed at bag appeal and terp intensity.'
   ].join(' '),
-  // ✅ pack-specific pricing
-  packs: { 3: 25, 7: 55, 12: 85 }
+  // ✅ pack-specific pricing (as requested)
+  packs: { 3: 10, 7: 22, 12: 45 }
 });
 
 /* Expose to other pages (strain.html) */
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', renderCatalogue);
 function renderFeatured(){
   const grid = document.getElementById('featured-grid');
   if(!grid) return;
-  const picks = PRODUCTS.slice(0,2);
+  const picks = PRODUCTS.slice(0,2);  // 2 featured cards
   grid.innerHTML = picks.map(buildCard).join('');
 
   grid.querySelectorAll('[data-add]').forEach(btn=>{
@@ -274,7 +274,6 @@ function openPackModal(prod){
       const btn = modal.querySelector(`[data-pack="${pk}"]`);
       if(!btn) return;
       const priceForPack = prod.packs?.[pk] ?? prod.price;
-      // e.g., "3 Seeds — $10.00" (falls back to "—" if null)
       btn.textContent = `${pk} Seeds — ${fmtPrice(priceForPack)}`;
     });
   }
@@ -419,8 +418,10 @@ document.addEventListener('click', (e)=>{
     }
 
     const cartDetails = cart.map(i =>
-      `${i.name} (Pack: ${i.pack || '-'}, Qty: ${i.qty}) - ${i.price ? '$'+i.price.toFixed(2) : '—'}`
+      `${i.name} (Pack: ${i.pack || '-'}, Qty: ${i.qty}) - ${i.price ? '$'+Number(i.price).toFixed(2) : '—'}`
     ).join('\n');
+
+    const total = cart.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
 
     try{
       await emailjs.send("service_5n04n5s","template_sujzntx",{
@@ -428,6 +429,7 @@ document.addEventListener('click', (e)=>{
         customer_email: email,
         customer_address: address,
         cart_contents: cartDetails,
+        total_amount: `$${total.toFixed(2)}`,
         timestamp: new Date().toISOString()
       });
 
