@@ -406,10 +406,10 @@ document.addEventListener('click', (e)=>{
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
 
-    const name = document.getElementById('order-name').value.trim();
-    const email = document.getElementById('order-email').value.trim();
-    const address = document.getElementById('order-address').value.trim();
-    const cart = readCart();
+    const name    = (document.getElementById('order-name')   ?.value || '').trim();
+    const email   = (document.getElementById('order-email')  ?.value || '').trim();
+    const address = (document.getElementById('order-address')?.value || '').trim();
+    const cart    = readCart();
 
     if(!cart.length){
       msg.textContent = "Your cart is empty.";
@@ -417,21 +417,43 @@ document.addEventListener('click', (e)=>{
       return;
     }
 
-    const cartDetails = cart.map(i =>
-      `${i.name} (Pack: ${i.pack || '-'}, Qty: ${i.qty}) - ${i.price ? '$'+Number(i.price).toFixed(2) : '—'}`
+    // Human-readable + JSON cart summaries
+    const cartReadable = cart.map(i =>
+      `${i.name}  |  Pack: ${i.pack || '-'}  |  Qty: ${i.qty}  |  ${i.price != null ? '$'+Number(i.price).toFixed(2) : '—'}`
     ).join('\n');
 
-    const total = cart.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
+    const total = cart.reduce((n,i)=> n + (i.price || 0) * i.qty, 0);
 
     try{
-      await emailjs.send("service_5n04n5s","template_sujzntx",{
+      await emailjs.send("service_5n04n5s", "template_sujzntx", {
+        // --- Your preferred "customer_*" fields (keep using these) ---
         customer_name: name,
         customer_email: email,
         customer_address: address,
-        cart_contents: cartDetails,
+        cart_contents: cartReadable,
         total_amount: `$${total.toFixed(2)}`,
         timestamp: new Date().toISOString(),
-        reply_to: email  // ✅ ensure replies go to the customer; helps with DMARC
+
+        // --- Also send the fields your older template expects ---
+        from_name: name,
+        from_email: email,
+        phone: "", // no phone field on form; leave blank or add one later
+
+        // Split shipping: we only have a single textarea, so map it to street and leave others blank
+        street: address,
+        city: "",
+        state: "",
+        zip: "",
+
+        notes: "", // add a notes <textarea> to your form later if you want
+        cart_readable: cartReadable,
+        cart_json: JSON.stringify(cart, null, 2),
+        submitted_at: new Date().toLocaleString(),
+        submit_ms: 0,  // you can wire this up to a timer if you want
+
+        // --- Delivery helpers ---
+        to_email: "bloomvaultfarms@gmail.com", // if your template has a {{to_email}} field
+        reply_to: email                        // ensures replies go to the customer
       });
 
       msg.textContent = "✅ Order sent! We’ll be in touch soon.";
