@@ -430,7 +430,8 @@ document.addEventListener('click', (e)=>{
         customer_address: address,
         cart_contents: cartDetails,
         total_amount: `$${total.toFixed(2)}`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        reply_to: email  // ✅ ensure replies go to the customer; helps with DMARC
       });
 
       msg.textContent = "✅ Order sent! We’ll be in touch soon.";
