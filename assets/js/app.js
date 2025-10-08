@@ -198,24 +198,29 @@ function renderCart(){
   if(empty) empty.style.display = 'none';
   if(checkoutBox) checkoutBox.style.display = 'block';
 
-  root.innerHTML = items.map(i=>`
-    <div class="bv-card">
-      <div class="top">
-        <div>
-          <div class="bv-title">${i.name}</div>
-          <div class="bv-meta">ID: ${i.id}${i.pack ? ` • Pack: ${i.pack}` : ''}</div>
+  root.innerHTML = items.map(i=>{
+    const unit = (i.price!=null) ? `$${i.price.toFixed(2)}` : '—';
+    const line = (i.price!=null) ? `$${(i.price * i.qty).toFixed(2)}` : '—';
+    return `
+      <div class="bv-card">
+        <div class="top" style="align-items:flex-start">
+          <div>
+            <div class="bv-title" style="margin-bottom:2px">${i.name}</div>
+            <div class="bv-meta">${i.pack ? `Pack: ${i.pack}` : ''}</div>
+          </div>
+          <button class="bv-btn" data-remove="${i.id}">Remove</button>
         </div>
-        <button class="bv-btn" data-remove="${i.id}">Remove</button>
-      </div>
-      <div class="bv-actions">
-        <div class="bv-meta">Price: ${i.price!=null? `$${i.price.toFixed(2)}` : '—'}</div>
-        <div style="margin-left:auto; display:flex; align-items:center; gap:6px">
-          <label class="bv-meta" for="qty-${i.id}">Qty</label>
-          <input id="qty-${i.id}" type="number" min="1" value="${i.qty}">
+        <div class="bv-actions" style="gap:14px">
+          <div class="bv-meta">Unit: ${unit}</div>
+          <div style="margin-left:auto; display:flex; align-items:center; gap:8px">
+            <label class="bv-meta" for="qty-${i.id}">Qty</label>
+            <input id="qty-${i.id}" type="number" min="1" value="${i.qty}" style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
+          </div>
+          <div class="bv-meta" style="min-width:110px;text-align:right">Line: ${line}</div>
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   root.querySelectorAll('[data-remove]').forEach(b=> b.addEventListener('click',()=> removeFromCart(b.getAttribute('data-remove'))));
   items.forEach(i=>{
