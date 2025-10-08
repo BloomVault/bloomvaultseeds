@@ -8,7 +8,47 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+
+  <style>
+    /* --- Optional polish (matches BV theme) --- */
+    .checkout-form input,
+    .checkout-form textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line, #333);
+      background: #0f0f0f;
+      color: #eaeaea;
+    }
+    .checkout-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .checkout-form label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .order-summary {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line, #333);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 8px;
+    }
+    .order-summary h4 {
+      margin: 0 0 8px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .order-summary .line {
+      display: flex;
+      justify-content: space-between;
+      margin: 4px 0;
+    }
+  </style>
 </head>
+
 <body>
 <header class="bv-header">
   <div class="bv-wrap">
@@ -17,11 +57,9 @@
         <img src="assets/img/logo.png" alt="BloomVault Farms">
       </a>
     </div>
-    <!-- Cart badge always visible -->
     <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
   </div>
 
-  <!-- TABS (no hamburger) -->
   <nav class="bv-tabs" aria-label="Primary">
     <a href="index.html">Home</a>
     <a href="catalogue.html">Seed Catalogue</a>
@@ -31,28 +69,29 @@
   </nav>
 </header>
 
-<!-- Seed Rain Banner sits directly under the tabs -->
 <div id="seed-rain-banner" aria-hidden="true"></div>
 
-<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
+<div class="compliance-ribbon">
+  Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
+</div>
 
 <section class="container">
   <h1 class="page-title">Your Cart</h1>
 
-  <!-- Cart items will render here -->
+  <!-- Cart items -->
   <div data-cart-root></div>
 
-  <!-- Empty cart prompt -->
+  <!-- Empty cart message -->
   <div class="cart-empty" data-cart-empty style="display:none">
     <p>Your cart is empty. Visit the catalogue to add items.</p>
     <a class="btn" href="catalogue.html">View Seed Catalogue</a>
   </div>
 
-  <!-- Checkout form (improved layout, same functionality) -->
+  <!-- Checkout form -->
   <div data-cart-checkout style="margin-top:20px">
     <h3>Checkout</h3>
 
-    <form id="order-form" class="checkout-form" style="display:grid;gap:12px">
+    <form id="order-form" class="checkout-form" style="display:grid;gap:14px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
           <label for="order-name">Name</label>
@@ -77,10 +116,26 @@ Country"></textarea>
         </small>
       </div>
 
+      <!-- Order summary -->
+      <div class="order-summary">
+        <h4>Order Summary</h4>
+        <div class="line">
+          <span>Subtotal</span>
+          <span data-total>$0.00</span>
+        </div>
+        <div class="line" style="opacity:0.8">
+          <span>Shipping</span>
+          <span>Calculated at confirmation</span>
+        </div>
+        <div class="line" style="font-weight:700;border-top:1px solid var(--line,#333);margin-top:6px;padding-top:6px">
+          <span>Estimated Total</span>
+          <span data-total>$0.00</span>
+        </div>
+      </div>
+
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
         <a class="btn" href="catalogue.html">Continue Shopping</a>
         <button type="submit" class="btn btn-primary">Submit Order</button>
-        <span style="margin-left:auto;font-weight:600">Total: <span data-total>$0.00</span></span>
       </div>
 
       <small id="order-msg" class="muted" style="margin-top:8px;display:block"></small>
@@ -94,13 +149,13 @@ Country"></textarea>
   </div>
 </footer>
 
-<!-- EmailJS (must load before app.js) -->
+<!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
 </script>
 
-<!-- Your main JS (after EmailJS). Bump version if needed to bust cache -->
+<!-- Main app -->
 <script defer src="assets/js/app.js?v=12"></script>
 </body>
 </html>
