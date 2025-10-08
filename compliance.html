@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Compliance & FAQ · BloomVault Farms</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
+
 <body>
 <header class="bv-header">
   <div class="bv-wrap">
@@ -20,39 +22,49 @@
     <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
   </div>
 
-  <!-- TABS (no hamburger) -->
   <nav class="bv-tabs" aria-label="Primary">
     <a href="index.html">Home</a>
     <a href="catalogue.html">Seed Catalogue</a>
     <a href="about.html">About</a>
-    <a href="compliance.html">Compliance &amp; FAQ</a>
+    <a href="compliance.html" class="active">Compliance &amp; FAQ</a>
     <a href="cart.html">Cart <span class="tab-badge" data-cart-tab-count>0</span></a>
   </nav>
 </header>
 
-<!-- Seed Rain Banner sits directly under the tabs -->
 <div id="seed-rain-banner" aria-hidden="true"></div>
 
-<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
+<div class="compliance-ribbon">
+  Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
+</div>
 
 <section class="container">
   <h1 class="page-title">Compliance & FAQ</h1>
-  <div class="card">
-    <h3>Important Notice</h3>
-    <p>All cannabis seeds are sold as novelty/souvenir genetics. Germination and cultivation are subject to your local laws. By purchasing, you agree you are 21+ and will comply with all applicable regulations in your jurisdiction.</p>
-  </div>
-  <div class="grid-2">
-    <div class="card">
-      <h3>Shipping</h3>
-      <ul>
-        <li>Seeds only; no plant material is shipped.</li>
-        <li>Discrete packaging. Tracking provided where available.</li>
-        <li>We reserve the right to refuse orders to jurisdictions with restrictions.</li>
-      </ul>
+
+  <div class="faq-section">
+    <div class="faq-item">
+      <h2>Legal Notice</h2>
+      <p>
+        All seeds sold by <strong>BloomVault Farms</strong> are strictly for <em>novelty, souvenir, and collectible</em> purposes.
+        Germination or cultivation of hemp or cannabis seeds is subject to local and federal laws. 
+        Buyers are solely responsible for compliance within their jurisdiction.
+      </p>
     </div>
-    <div class="card">
-      <h3>Returns</h3>
-      <p>Due to the nature of seeds, all sales are final. If your order arrives damaged, contact us with your order ID within 72 hours.</p>
+
+    <div class="faq-item">
+      <h2>Testing & Compliance</h2>
+      <p>
+        BloomVault’s breeding and selection processes prioritize hemp cultivars that align with USDA and Virginia hemp
+        regulations (< 0.3% Δ9-THC). We work closely with regional testing facilities to ensure transparency and compliance.
+      </p>
+    </div>
+
+    <div class="faq-item">
+      <h2>Shipping & Terms</h2>
+      <p>
+        Orders are packaged discreetly and shipped within 3–5 business days. 
+        BloomVault Farms cannot accept responsibility for items seized by customs or local authorities due to differing regulations. 
+        All sales are final once shipped.
+      </p>
     </div>
   </div>
 </section>
@@ -62,16 +74,8 @@
     <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
   </div>
 </footer>
-  <!-- EmailJS (must load before app.js) -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
-</script>
 
-<!-- Your main JS (after EmailJS). Cache-busted with ?v=7 -->
-<script defer src="assets/js/app.js?v=7"></script>
-</body>
-</html>
-
+<!-- Scripts -->
+<script defer src="assets/js/app.js?v=15"></script>
 </body>
 </html>
