@@ -724,19 +724,21 @@ a{color:var(--gold)}
 }
 
 /* ===============================
-   Compliance / FAQ Styling
+   Compliance / FAQ Styling (White Headings)
    =============================== */
 .faq-section {
   display: flex;
   flex-direction: column;
-  gap: 32px; /* 🔹 spacing between sections */
+  gap: 32px; /* spacing between sections */
   margin-top: 24px;
 }
 
 .faq-item h2 {
-  color: #d7b25a;
+  color: #fff; /* 🔹 changed from gold to white */
   margin-bottom: 10px;
   font-size: 1.4em;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .faq-item p {
