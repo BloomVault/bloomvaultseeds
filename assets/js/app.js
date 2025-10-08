@@ -12,7 +12,7 @@ const PRODUCTS = [
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Chimera #3 × Animal Cookies',
+    lineage: 'Animal Cookies x Chimera #3',
     flavors: 'Cookie dough, cream, gas, earthy spice',
     notes: [
       'Blends Animal Cookies’ creamy sweetness with Chimera #3’s resin-heavy structure.',
@@ -29,7 +29,7 @@ const PRODUCTS = [
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Lemon Tree × AJ Sour Diesel',
+    lineage: 'Lemon Tree × Sour Diesel',
     flavors: 'Citrus zest, jet fuel, diesel haze, burnt rubber',
     notes: [
       'Lemon Tree’s tangy peel collides with AJ Sour Diesel’s raw fuel funk.',
@@ -46,7 +46,7 @@ const PRODUCTS = [
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Cake n Chem × Cali Cannon',
+    lineage: 'Cali Cannon × Cake n Chem',
     flavors: 'Vanilla cake, sweet dough, high-octane gas, light chem',
     notes: [
       'Creamy Cake n Chem sweetness amplified by Cali Cannon’s explosive gas.',
@@ -63,13 +63,13 @@ const PRODUCTS = [
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Lemon Tree × Hazmat OG',
+    lineage: 'Lemon Tree x Roadkill Skunk',
     flavors: 'Sharp lemon, industrial gas, pine, sour diesel',
     notes: [
-      'Cuts Lemon Tree’s bright citrus with Hazmat OG’s heavy chem/fuel.',
-      'Stacks speared, diesel-glazed colas with a loud lemon-solvent nose.',
-      'Medium–tall with strong apical growth; responds well to topping and SCROG.',
-      '9–10 weeks; dial for expression between lemon-candy and chemical pine.'
+      'Blends Roadkill Skunk’s raw, old-school funk with Lemon Tree’s sharp citrus zest.',
+      'Stacks dense, diesel-glazed colas with an unmistakable lemon-skunk nose that cuts through the room.',
+      'Medium–tall structure with strong apical growth; thrives with topping and light training.',
+      'Finishes in 9–10 weeks, showing expressions that range from candy lemon to chemical skunk haze.'
     ].join(' ')
   }
 ];
