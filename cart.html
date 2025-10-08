@@ -17,7 +17,7 @@
         <img src="assets/img/logo.png" alt="BloomVault Farms">
       </a>
     </div>
-    <!-- This small bubble can stay (your JS will ignore it if not used) -->
+    <!-- Cart badge always visible -->
     <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
   </div>
 
@@ -48,24 +48,42 @@
     <a class="btn" href="catalogue.html">View Seed Catalogue</a>
   </div>
 
-  <!-- Checkout form (original layout preserved) -->
+  <!-- Checkout form (improved layout, same functionality) -->
   <div data-cart-checkout style="margin-top:20px">
     <h3>Checkout</h3>
-    <form id="order-form" class="checkout-form">
-      <label for="order-name">Name</label>
-      <input type="text" id="order-name" required>
 
-      <label for="order-email">Email</label>
-      <input type="email" id="order-email" required>
+    <form id="order-form" class="checkout-form" style="display:grid;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label for="order-name">Name</label>
+          <input type="text" id="order-name" required placeholder="Your full name">
+        </div>
+        <div>
+          <label for="order-email">Email</label>
+          <input type="email" id="order-email" required placeholder="you@example.com">
+        </div>
+      </div>
 
-      <label for="order-address">Shipping Address</label>
-      <textarea id="order-address" required></textarea>
+      <div>
+        <label for="order-address">Shipping Address</label>
+        <textarea id="order-address" required
+          placeholder="Street Address
+City
+State / Province
+ZIP / Postal Code
+Country"></textarea>
+        <small class="muted" style="display:block;margin-top:6px;opacity:.75">
+          Tip: one detail per line (Street → City → State → ZIP → Country).
+        </small>
+      </div>
 
-      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
         <a class="btn" href="catalogue.html">Continue Shopping</a>
         <button type="submit" class="btn btn-primary">Submit Order</button>
+        <span style="margin-left:auto;font-weight:600">Total: <span data-total>$0.00</span></span>
       </div>
-      <small id="order-msg" class="muted"></small>
+
+      <small id="order-msg" class="muted" style="margin-top:8px;display:block"></small>
     </form>
   </div>
 </section>
