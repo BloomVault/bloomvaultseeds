@@ -3,41 +3,76 @@
    ========================================================= */
 
 /* ===================== PRODUCTS ===================== */
-const PRODUCTS = Array.from({length: 12}).map((_, i) => ({
-  id: `bv-coming-${i+1}`,
-  name: `BloomVault Drop ${String(i+1).padStart(2, '0')}`,
-  category: ['OG','Cookies/Cake','Candy','Gas'][i % 4],   // not shown on cards anymore
-  type: (i % 2 === 0) ? 'Regular' : 'Feminized',
-  available: false,                 // flip to true when ready
-  img: null,                        // set to "assets/img/mystrain.jpg" when you have images
-  price: null,                      // null shows "—" on cards (we price by pack)
-  lineage: '—',
-  flavors: '—',
-  flower_type: '—',                 // e.g., Photoperiod / Auto
-  notes: 'Premium genetics are being finalized. Join the drop list to get first access when this strain goes live.'
-}));
-
-/* === Replace first placeholder with: Chimera #3 × Animal Cookies (+ pack prices) === */
-Object.assign(PRODUCTS[0], {
-  id: 'chimera3-animal-cookies',
-  name: 'Chimera #3 × Animal Cookies',
-  img: 'assets/img/strains/chimera-cookies.png',
-  available: true,            // shows the Add (pack) button
-  type: 'Feminized',
-  price: null,                // keep card showing “—”; pack prices used on add
-  lineage: 'Chimera #3 × Animal Cookies',
-  flavors: 'Sweet dough, vanilla, cocoa, berry, light gas',
-  flower_type: 'Photoperiod',
-  notes: [
-    'Cookies-forward nose: warm bakery dough with vanilla-cocoa; berry top notes; subtle fuel.',
-    'Dense, resin-heavy flowers with classic Cookies structure; medium internodes.',
-    'Medium stretch; responds well to topping, LST, and SCROG.',
-    '8–9 week indoor finish typical for Cookies-heavy hybrids (dial by phenotype).',
-    'Balanced vigor; quality-first selection aimed at bag appeal and terp intensity.'
-  ].join(' '),
-  // ✅ pack-specific pricing (as requested)
-  packs: { 3: 10, 7: 22, 12: 45 }
-});
+const PRODUCTS = [
+  {
+    id: 'cookie-essence',
+    name: 'Cookie Essence',
+    img: 'assets/img/strains/cookie-essence.png', // make sure this file exists
+    available: true,
+    type: 'Feminized',
+    flower_type: 'Photoperiod',
+    packs: { 3: 10, 7: 22, 12: 45 },
+    lineage: 'Chimera #3 × Animal Cookies',
+    flavors: 'Cookie dough, cream, gas, earthy spice',
+    notes: [
+      'Blends Animal Cookies’ creamy sweetness with Chimera #3’s resin-heavy structure.',
+      'Dense, cookie-shaped buds drenched in frost; bakery terps with a chem/gas finish.',
+      'Excellent bag appeal and potency; thrives with topping and light defoliation.',
+      '8–9 weeks indoor for peak aroma and color.'
+    ].join(' ')
+  },
+  {
+    id: 'octane-peel',
+    name: 'Octane Peel',
+    img: 'assets/img/strains/octane-peel.png',
+    available: true,
+    type: 'Feminized',
+    flower_type: 'Photoperiod',
+    packs: { 3: 10, 7: 22, 12: 45 },
+    lineage: 'Lemon Tree × AJ Sour Diesel',
+    flavors: 'Citrus zest, jet fuel, diesel haze, burnt rubber',
+    notes: [
+      'Lemon Tree’s tangy peel collides with AJ Sour Diesel’s raw fuel funk.',
+      'Vigorous plants stack thick diesel colas; room-filling lemon-fuel aroma.',
+      'Tall, upright structure; stakes/trellis recommended.',
+      '9–10 weeks; energetic, high-terp profile.'
+    ].join(' ')
+  },
+  {
+    id: 'detonator-cake',
+    name: 'Detonator Cake',
+    img: 'assets/img/strains/detonator-cake.png',
+    available: true,
+    type: 'Feminized',
+    flower_type: 'Photoperiod',
+    packs: { 3: 10, 7: 22, 12: 45 },
+    lineage: 'Cake n Chem × Cali Cannon',
+    flavors: 'Vanilla cake, sweet dough, high-octane gas, light chem',
+    notes: [
+      'Creamy Cake n Chem sweetness amplified by Cali Cannon’s explosive gas.',
+      'Frosted, sticky flowers with doughy undertones and a sharp chem bite.',
+      'Eye-catching bag appeal; great for flower or extracts.',
+      '8–9 weeks; medium height, easy to train.'
+    ].join(' ')
+  },
+  {
+    id: 'lemon-hazmat',
+    name: 'Lemon HazMat',
+    img: 'assets/img/strains/lemon-hazmat.png',
+    available: true,
+    type: 'Feminized',
+    flower_type: 'Photoperiod',
+    packs: { 3: 10, 7: 22, 12: 45 },
+    lineage: 'Lemon Tree × Hazmat OG',
+    flavors: 'Sharp lemon, industrial gas, pine, sour diesel',
+    notes: [
+      'Cuts Lemon Tree’s bright citrus with Hazmat OG’s heavy chem/fuel.',
+      'Stacks speared, diesel-glazed colas with a loud lemon-solvent nose.',
+      'Medium–tall with strong apical growth; responds well to topping and SCROG.',
+      '9–10 weeks; dial for expression between lemon-candy and chemical pine.'
+    ].join(' ')
+  }
+];
 
 /* Expose to other pages (strain.html) */
 window.PRODUCTS = PRODUCTS;
@@ -436,7 +471,7 @@ document.addEventListener('click', (e)=>{
 
     try{
       await emailjs.send("service_5n04n5s", "template_sujzntx", {
-        // --- Your preferred "customer_*" fields (keep using these) ---
+        // Preferred fields
         customer_name: name,
         customer_email: email,
         customer_address: address,
@@ -444,26 +479,21 @@ document.addEventListener('click', (e)=>{
         total_amount: `$${total.toFixed(2)}`,
         timestamp: new Date().toISOString(),
 
-        // --- Also send the fields your older template expects ---
+        // Legacy compatibility (if your template still references these)
         from_name: name,
         from_email: email,
-        phone: "", // no phone field on form; leave blank or add one later
-
-        // Split shipping: we only have a single textarea, so map it to street and leave others blank
+        phone: "",
         street: address,
-        city: "",
-        state: "",
-        zip: "",
-
-        notes: "", // add a notes <textarea> to your form later if you want
+        city: "", state: "", zip: "",
+        notes: "",
         cart_readable: cartReadable,
         cart_json: JSON.stringify(cart, null, 2),
         submitted_at: new Date().toLocaleString(),
-        submit_ms: 0,  // you can wire this up to a timer if you want
+        submit_ms: 0,
 
-        // --- Delivery helpers ---
-        to_email: "bloomvaultfarms@gmail.com", // if your template has a {{to_email}} field
-        reply_to: email                        // ensures replies go to the customer
+        // Delivery helpers
+        to_email: "bloomvaultfarms@gmail.com",
+        reply_to: email
       });
 
       msg.textContent = "✅ Order sent! We’ll be in touch soon.";
