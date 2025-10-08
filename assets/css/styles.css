@@ -748,3 +748,10 @@ a{color:var(--gold)}
   opacity: 0.9;
   margin: 0;
 }
+
+.page-title .cart-total{
+  margin-left: 10px;
+  font-weight: 700;
+  color: var(--gold, #d4af37); /* uses your theme gold if defined */
+  letter-spacing: .3px;
+}
