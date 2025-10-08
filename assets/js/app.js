@@ -509,3 +509,23 @@ document.addEventListener('click', (e)=>{
     }
   });
 })();
+
+// === Ensure compliance ribbon only appears once and in footer ===
+(function(){
+  const ribbonHTML = `
+    <div class="compliance-ribbon" style="margin-top:10px">
+      Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
+    </div>`;
+  const footer = document.querySelector('footer.site-footer');
+  const existing = document.querySelector('.compliance-ribbon');
+
+  if (!footer) return;
+
+  // If there's a ribbon already somewhere else, remove it.
+  if (existing && existing.parentElement !== footer) existing.remove();
+
+  // Ensure it's appended to the footer if missing
+  if (!footer.querySelector('.compliance-ribbon')) {
+    footer.insertAdjacentHTML('beforeend', ribbonHTML);
+  }
+})();
