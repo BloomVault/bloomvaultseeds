@@ -192,15 +192,17 @@ function renderCart(){
     root.innerHTML = '';
     if(empty) empty.style.display = 'block';
     if(checkoutBox) checkoutBox.style.display = 'none';
+    // reset totals
+    document.querySelectorAll('[data-total]').forEach(el=> el.textContent = '$0.00');
     return;
   }
 
   if(empty) empty.style.display = 'none';
   if(checkoutBox) checkoutBox.style.display = 'block';
 
+  // Clean item layout: title, pack, unit + qty (no per-item "Line: $")
   root.innerHTML = items.map(i=>{
-    const unit = (i.price!=null) ? `$${i.price.toFixed(2)}` : '—';
-    const line = (i.price!=null) ? `$${(i.price * i.qty).toFixed(2)}` : '—';
+    const unit = (i.price!=null) ? `$${Number(i.price).toFixed(2)}` : '—';
     return `
       <div class="bv-card">
         <div class="top" style="align-items:flex-start">
@@ -214,22 +216,25 @@ function renderCart(){
           <div class="bv-meta">Unit: ${unit}</div>
           <div style="margin-left:auto; display:flex; align-items:center; gap:8px">
             <label class="bv-meta" for="qty-${i.id}">Qty</label>
-            <input id="qty-${i.id}" type="number" min="1" value="${i.qty}" style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
+            <input id="qty-${i.id}" type="number" min="1" value="${i.qty}"
+                   style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
           </div>
-          <div class="bv-meta" style="min-width:110px;text-align:right">Line: ${line}</div>
         </div>
       </div>
     `;
   }).join('');
 
+  // wire up actions
   root.querySelectorAll('[data-remove]').forEach(b=> b.addEventListener('click',()=> removeFromCart(b.getAttribute('data-remove'))));
   items.forEach(i=>{
     const inp = document.getElementById(`qty-${i.id}`);
     if(inp) inp.addEventListener('change', ()=> updateQty(i.id, +inp.value));
   });
 
+  // update all totals (there may be more than one [data-total] on the page)
   const total = items.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
-  document.querySelector('[data-total]')?.replaceChildren(document.createTextNode(`$${total.toFixed(2)}`));
+  const t = `$${total.toFixed(2)}`;
+  document.querySelectorAll('[data-total]').forEach(el=> el.textContent = t);
 }
 document.addEventListener('DOMContentLoaded', renderCart);
 
