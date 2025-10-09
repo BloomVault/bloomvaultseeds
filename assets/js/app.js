@@ -32,7 +32,7 @@ const PRODUCTS = [
     lineage: 'Lemon Tree × Sour Diesel',
     flavors: 'Citrus zest, jet fuel, diesel haze, burnt rubber',
     notes: [
-      'Lemon Tree’s tangy peel collides with AJ Sour Diesel’s raw fuel funk.',
+      'Lemon Tree’s tangy peel collides with Sour Diesel’s raw fuel funk.',
       'Vigorous plants stack thick diesel colas; room-filling lemon-fuel aroma.',
       'Tall, upright structure; stakes/trellis recommended.',
       '9–10 weeks; energetic, high-terp profile.'
