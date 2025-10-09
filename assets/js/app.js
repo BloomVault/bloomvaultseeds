@@ -6,7 +6,7 @@
 const PRODUCTS = [
   {
     id: 'cookie-essence',
-    name: 'Cookie Essence (COMING SOON)',
+    name: '(COMING SOON)',
     img: 'assets/img/strains/cookie-essence.png', // make sure this file exists
     available: true,
     type: 'Feminized',
@@ -23,7 +23,7 @@ const PRODUCTS = [
   },
   {
     id: 'octane-peel',
-    name: 'Octane Peel (COMING SOON)',
+    name: '(COMING SOON)',
     img: 'assets/img/strains/octane-peel.png',
     available: true,
     type: 'Feminized',
@@ -40,7 +40,7 @@ const PRODUCTS = [
   },
   {
     id: 'detonator-cake',
-    name: 'Detonator Cake (COMING SOON)',
+    name: '(COMING SOON)',
     img: 'assets/img/strains/detonator-cake.png',
     available: true,
     type: 'Feminized',
@@ -57,7 +57,7 @@ const PRODUCTS = [
   },
   {
     id: 'lemon-hazmat ',
-    name: 'Lemon HazMat (COMING SOON)',
+    name: '(COMING SOON)',
     img: 'assets/img/strains/lemon-hazmat.png',
     available: true,
     type: 'Feminized',
