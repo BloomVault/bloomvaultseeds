@@ -61,11 +61,13 @@
 </section>
 
 <section id="subscribe" class="subscribe container">
-  <h2>Sign up for a chance to be a tester, get sneek peeks on new drops, and more! Watch Your Email! (Be sure to check your SPAM folder.)</h2
-  <form id="subscribe-form" class="subscribe-form">
-    <input type="email" id="subscribe-email" placeholder="you@example.com" required>
+  <h2>Sign up for a chance to be a tester, get sneak peeks on new drops, and more! Watch your email (and check your spam folder).</h2>
+  <form id="subscribe-form" class="subscribe-form" autocomplete="on" novalidate>
+    <!-- honeypot (hidden from users; helps reduce bot spam) -->
+    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-5000px;opacity:0">
+    <input type="email" id="subscribe-email" placeholder="you@example.com" required inputmode="email" autocomplete="email">
     <button class="btn btn-primary" type="submit">Subscribe</button>
-    <small id="subscribe-msg" class="muted"></small>
+    <small id="subscribe-msg" class="muted" role="status" aria-live="polite"></small>
   </form>
 </section>
 
@@ -87,7 +89,6 @@
 </script>
 
 <!-- Main app JS (cache-busted) -->
-<script defer src="assets/js/app.js?v=7"></script>
+<script defer src="assets/js/app.js?v=8"></script>
 </body>
 </html>
-
