@@ -30,9 +30,6 @@
   </nav>
 </header>
 
-<!-- Seed Rain Banner sits directly under the tabs -->
-<div id="seed-rain-banner" aria-hidden="true"></div>
-
 <section class="hero">
   <div class="container hero-inner">
     <h1 class="hero-title">Premium Cannabis Genetics, Secured in the Vault</h1>
@@ -46,9 +43,18 @@
 
 <section class="features container">
   <div class="grid-3">
-    <div class="card"><h3>Meticulous Selection</h3><p>Every parent is hand-picked for vigor, architecture, and a terp profile that hits the room before the jar opens.</p></div>
-    <div class="card"><h3>Vault-Grade Consistency</h3><p>We take pride in keeping our genetics honest. Every batch is documented, tracked, and revisited—so when you grow a BloomVault strain, you know it’s true to its name, true to its lineage, and true to what we stand for.</p></div>
-    <div class="card"><h3>Collector-Worthy Drops</h3><p>Each release is crafted, not churned out. We work small so every drop carries meaning—distinct flavors, unique expressions, and the kind of character worth remembering in your garden.</p></div>
+    <div class="card">
+      <h3>Meticulous Selection</h3>
+      <p>Every parent is hand-picked for vigor, architecture, and a terp profile that hits the room before the jar opens.</p>
+    </div>
+    <div class="card">
+      <h3>Vault-Grade Consistency</h3>
+      <p>We take pride in keeping our genetics honest. Every batch is documented, tracked, and revisited—so when you grow a BloomVault strain, you know it’s true to its name, true to its lineage, and true to what we stand for.</p>
+    </div>
+    <div class="card">
+      <h3>Collector-Worthy Drops</h3>
+      <p>Each release is crafted, not churned out. We work small so every drop carries meaning—distinct flavors, unique expressions, and the kind of character worth remembering in your garden.</p>
+    </div>
   </div>
 </section>
 
@@ -63,7 +69,6 @@
 <section id="subscribe" class="subscribe container">
   <h2>Sign up for a chance to be a tester, get sneak peeks on new drops, and more! Watch your email (and check your spam folder).</h2>
   <form id="subscribe-form" class="subscribe-form" autocomplete="on" novalidate>
-    <!-- honeypot (hidden from users; helps reduce bot spam) -->
     <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-5000px;opacity:0">
     <input type="email" id="subscribe-email" placeholder="you@example.com" required inputmode="email" autocomplete="email">
     <button class="btn btn-primary" type="submit">Subscribe</button>
@@ -89,6 +94,6 @@
 </script>
 
 <!-- Main app JS (cache-busted) -->
-<script defer src="assets/js/app.js?v=8"></script>
+<script defer src="assets/js/app.js?v=9"></script>
 </body>
 </html>
