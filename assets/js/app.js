@@ -6,13 +6,13 @@
 const PRODUCTS = [
   {
     id: 'cookie-essence',
-    name: '(COMING SOON)',
-    img: 'assets/img/strains/cookie-essence.png', // make sure this file exists
+    name: 'Cookie Essence',
+    img: 'assets/img/strains/cookie-essence.png',
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Animal Cookies x Chimera #3',
+    lineage: 'Chimera #3 × Animal Cookies',
     flavors: 'Cookie dough, cream, gas, earthy spice',
     notes: [
       'Blends Animal Cookies’ creamy sweetness with Chimera #3’s resin-heavy structure.',
@@ -23,16 +23,16 @@ const PRODUCTS = [
   },
   {
     id: 'octane-peel',
-    name: '(COMING SOON)',
+    name: 'Octane Peel',
     img: 'assets/img/strains/octane-peel.png',
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Lemon Tree × Sour Diesel',
+    lineage: 'Lemon Tree × AJ Sour Diesel',
     flavors: 'Citrus zest, jet fuel, diesel haze, burnt rubber',
     notes: [
-      'Lemon Tree’s tangy peel collides with Sour Diesel’s raw fuel funk.',
+      'Lemon Tree’s tangy peel collides with AJ Sour Diesel’s raw fuel funk.',
       'Vigorous plants stack thick diesel colas; room-filling lemon-fuel aroma.',
       'Tall, upright structure; stakes/trellis recommended.',
       '9–10 weeks; energetic, high-terp profile.'
@@ -40,13 +40,13 @@ const PRODUCTS = [
   },
   {
     id: 'detonator-cake',
-    name: '(COMING SOON)',
+    name: 'Detonator Cake',
     img: 'assets/img/strains/detonator-cake.png',
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Cali Cannon × Cake n Chem',
+    lineage: 'Cake n Chem × Cali Cannon',
     flavors: 'Vanilla cake, sweet dough, high-octane gas, light chem',
     notes: [
       'Creamy Cake n Chem sweetness amplified by Cali Cannon’s explosive gas.',
@@ -56,25 +56,24 @@ const PRODUCTS = [
     ].join(' ')
   },
   {
-    id: 'lemon-hazmat ',
-    name: '(COMING SOON)',
+    id: 'lemon-hazmat',
+    name: 'Lemon HazMat',
     img: 'assets/img/strains/lemon-hazmat.png',
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
     packs: { 3: 10, 7: 22, 12: 45 },
-    lineage: 'Lemon Tree x Roadkill Skunk',
-    flavors: 'Sharp lemon, industrial gas, pine, sour diesel',
+    lineage: 'Roadkill Skunk × Lemon Tree',
+    flavors: 'Lemon peel, skunk spray, fuel, earth, solvent zest',
     notes: [
-      'Blends Roadkill Skunk’s raw, old-school funk with Lemon Tree’s sharp citrus zest.',
-      'Stacks dense, diesel-glazed colas with an unmistakable lemon-skunk nose that cuts through the room.',
-      'Medium–tall structure with strong apical growth; thrives with topping and light training.',
-      'Finishes in 9–10 weeks, showing expressions that range from candy lemon to chemical skunk haze.'
+      'A fusion of Roadkill Skunk’s old-school funk and Lemon Tree’s sharp citrus tang.',
+      'Bold nose of lemon-fuel solvent with that unmistakable skunky punch.',
+      'Medium–tall frame, strong branching, and heavy bud set ideal for training.',
+      '9–10 week flowering; expressive phenotypes range from lemon funk to citrus diesel.'
     ].join(' ')
   }
 ];
 
-/* Expose to other pages (strain.html) */
 window.PRODUCTS = PRODUCTS;
 
 /* ---------- Active link highlight (tabs-only) ---------- */
@@ -104,7 +103,6 @@ const readCart = ()=> { try{ return JSON.parse(localStorage.getItem(CART_KEY)||'
 const writeCart = items => localStorage.setItem(CART_KEY, JSON.stringify(items));
 const cartCount = ()=> readCart().reduce((n,i)=>n+i.qty,0);
 
-/* Update both the old bubble (if present) and the Cart tab badge (always) */
 function updateCartBubbles(){
   document.querySelectorAll('[data-cart-count]').forEach(el=> el.textContent = cartCount());
   document.querySelectorAll('[data-cart-tab-count]').forEach(el=> el.textContent = cartCount());
@@ -152,13 +150,13 @@ function buildCard(p){
   `;
 }
 
-/* ===================== CATALOGUE RENDER (Seed Type + Price sort) ===================== */
+/* ===================== CATALOGUE RENDER ===================== */
 function renderCatalogue(){
   const grid = document.getElementById('catalogue-grid') || document.querySelector('[data-grid]');
   if(!grid) return;
 
-  const typeSel = document.getElementById('filter-type'); // "" | Feminized | Regular
-  const sortSel = document.getElementById('sort-price');  // "" | asc | desc
+  const typeSel = document.getElementById('filter-type');
+  const sortSel = document.getElementById('sort-price');
 
   const typeVal = (typeSel?.value || '').trim();
   const sortVal = (sortSel?.value || '').trim();
@@ -166,17 +164,9 @@ function renderCatalogue(){
   let items = PRODUCTS.filter(p => !typeVal || p.type === typeVal);
 
   if (sortVal === 'asc'){
-    items.sort((a,b)=>{
-      const pa = (a.price==null ? Infinity : +a.price);
-      const pb = (b.price==null ? Infinity : +b.price);
-      return pa - pb;
-    });
+    items.sort((a,b)=> (a.price??Infinity) - (b.price??Infinity));
   } else if (sortVal === 'desc'){
-    items.sort((a,b)=>{
-      const pa = (a.price==null ? -1 : +a.price);
-      const pb = (b.price==null ? -1 : +b.price);
-      return pb - pa;
-    });
+    items.sort((a,b)=> (b.price??-1) - (a.price??-1));
   }
 
   grid.innerHTML = items.map(buildCard).join('');
@@ -184,9 +174,7 @@ function renderCatalogue(){
   grid.querySelectorAll('[data-add]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
-      if(prod && prod.available){
-        openPackModal(prod);
-      }
+      if(prod && prod.available){ openPackModal(prod); }
     });
   });
 }
@@ -200,15 +188,13 @@ document.addEventListener('DOMContentLoaded', renderCatalogue);
 function renderFeatured(){
   const grid = document.getElementById('featured-grid');
   if(!grid) return;
-  const picks = PRODUCTS.slice(0,2);  // 2 featured cards
+  const picks = PRODUCTS.slice(0,2);
   grid.innerHTML = picks.map(buildCard).join('');
 
   grid.querySelectorAll('[data-add]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
-      if(prod && prod.available){
-        openPackModal(prod);
-      }
+      if(prod && prod.available){ openPackModal(prod); }
     });
   });
 }
@@ -227,7 +213,6 @@ function renderCart(){
     root.innerHTML = '';
     if(empty) empty.style.display = 'block';
     if(checkoutBox) checkoutBox.style.display = 'none';
-    // reset totals
     document.querySelectorAll('[data-total]').forEach(el=> el.textContent = '$0.00');
     return;
   }
@@ -235,7 +220,6 @@ function renderCart(){
   if(empty) empty.style.display = 'none';
   if(checkoutBox) checkoutBox.style.display = 'block';
 
-  // Clean item layout: title, pack, unit + qty (no per-item "Line: $")
   root.innerHTML = items.map(i=>{
     const unit = (i.price!=null) ? `$${Number(i.price).toFixed(2)}` : '—';
     return `
@@ -251,35 +235,32 @@ function renderCart(){
           <div class="bv-meta">Unit: ${unit}</div>
           <div style="margin-left:auto; display:flex; align-items:center; gap:8px">
             <label class="bv-meta" for="qty-${i.id}">Qty</label>
-            <input id="qty-${i.id}" type="number" min="1" value="${i.qty}"
-                   style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
+            <input id="qty-${i.id}" type="number" min="1" value="${i.qty}" style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
           </div>
         </div>
       </div>
     `;
   }).join('');
 
-  // wire up actions
   root.querySelectorAll('[data-remove]').forEach(b=> b.addEventListener('click',()=> removeFromCart(b.getAttribute('data-remove'))));
   items.forEach(i=>{
     const inp = document.getElementById(`qty-${i.id}`);
     if(inp) inp.addEventListener('change', ()=> updateQty(i.id, +inp.value));
   });
 
-  // update all totals (there may be more than one [data-total] on the page)
   const total = items.reduce((n,i)=> n + (i.price||0)*i.qty, 0);
   const t = `$${total.toFixed(2)}`;
   document.querySelectorAll('[data-total]').forEach(el=> el.textContent = t);
 }
 document.addEventListener('DOMContentLoaded', renderCart);
 
-/* ===== Pack size chooser modal ===== */
+/* ===== Pack Modal ===== */
 (function(){
   if (document.getElementById('pack-modal-backdrop')) return;
   const wrap = document.createElement('div');
   wrap.id = 'pack-modal-backdrop';
   wrap.innerHTML = `
-    <div id="pack-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div id="pack-modal" role="dialog" aria-modal="true">
       <h3>Select Pack Size</h3>
       <div class="muted">Choose the number of seeds for <span id="pack-prod-name"></span>.</div>
       <div class="choices">
@@ -288,244 +269,110 @@ document.addEventListener('DOMContentLoaded', renderCart);
         <button data-pack="12">12 Seeds</button>
       </div>
       <div class="row-end">
-        <button class="btn" type="button" data-pack-cancel>Cancel</button>
+        <button class="btn" data-pack-cancel>Cancel</button>
       </div>
     </div>
   `;
   document.body.appendChild(wrap);
-
   wrap.addEventListener('click', e => { if(e.target === wrap) closePackModal(); });
-  wrap.querySelector('[data-pack-cancel]')?.addEventListener('click', closePackModal);
+  wrap.querySelector('[data-pack-cancel]').addEventListener('click', closePackModal);
 })();
-
 let PACK_MODAL_PRODUCT = null;
 
-function fmtPrice(v){
-  if (v == null || isNaN(v)) return '—';
-  return `$${Number(v).toFixed(2)}`;
-}
+function fmtPrice(v){ return (v==null||isNaN(v)) ? '—' : `$${Number(v).toFixed(2)}`; }
 
 function openPackModal(prod){
   PACK_MODAL_PRODUCT = prod;
-
-  // Update title
-  const nameEl = document.getElementById('pack-prod-name');
-  if(nameEl) nameEl.textContent = prod?.name || '';
-
-  // Update button labels to show prices if defined
+  document.getElementById('pack-prod-name').textContent = prod?.name || '';
   const modal = document.getElementById('pack-modal');
-  if (modal && prod){
-    ['3','7','12'].forEach(pk=>{
-      const btn = modal.querySelector(`[data-pack="${pk}"]`);
-      if(!btn) return;
-      const priceForPack = prod.packs?.[pk] ?? prod.price;
-      btn.textContent = `${pk} Seeds — ${fmtPrice(priceForPack)}`;
-    });
-  }
-
-  const bd = document.getElementById('pack-modal-backdrop');
-  if(bd){ bd.setAttribute('data-show','1'); }
+  ['3','7','12'].forEach(pk=>{
+    const btn = modal.querySelector(`[data-pack="${pk}"]`);
+    if(!btn) return;
+    const price = prod.packs?.[pk] ?? prod.price;
+    btn.textContent = `${pk} Seeds — ${fmtPrice(price)}`;
+  });
+  document.getElementById('pack-modal-backdrop').setAttribute('data-show','1');
 }
 function closePackModal(){
-  const bd = document.getElementById('pack-modal-backdrop');
-  if(bd){ bd.removeAttribute('data-show'); }
+  document.getElementById('pack-modal-backdrop').removeAttribute('data-show');
   PACK_MODAL_PRODUCT = null;
 }
-
-/* Hook into pack choices */
-document.addEventListener('click', (e)=>{
-  const addBtn = e.target.closest('[data-add]');
-  if(addBtn){
-    const prod = PRODUCTS.find(p=> p.id === addBtn.getAttribute('data-add'));
-    if(prod && prod.available){
-      openPackModal(prod);
-    }
-  }
-
+document.addEventListener('click', e=>{
   const choose = e.target.closest('#pack-modal .choices [data-pack]');
   if(choose && PACK_MODAL_PRODUCT){
     const pack = +choose.getAttribute('data-pack');
-    const variantId = `${PACK_MODAL_PRODUCT.id}-p${pack}`;
-    const displayName = `${PACK_MODAL_PRODUCT.name} — ${pack} Seeds`;
-
-    // ✅ Price comes from packs[pack]; falls back to product price if needed
-    const priceForPack = (PACK_MODAL_PRODUCT.packs && PACK_MODAL_PRODUCT.packs[pack]) != null
-      ? PACK_MODAL_PRODUCT.packs[pack]
-      : PACK_MODAL_PRODUCT.price;
-
-    addToCart({
-      id: variantId,
-      name: displayName,
-      price: priceForPack ?? null,
-      qty: 1,
-      pack
-    });
-
+    const id = `${PACK_MODAL_PRODUCT.id}-p${pack}`;
+    const name = `${PACK_MODAL_PRODUCT.name} — ${pack} Seeds`;
+    const price = PACK_MODAL_PRODUCT.packs?.[pack] ?? PACK_MODAL_PRODUCT.price;
+    addToCart({ id, name, price, qty:1, pack });
     closePackModal();
   }
 });
 
-/* ===== Seed Rain Banner (unchanged) ===== */
-(function(){
-  const banner = document.getElementById('seed-rain-banner');
-  if(!banner) return;
-  const SEED_SRC = 'assets/img/seed.png';
-  const FALLBACK_ASPECT = 0.64;
-
-  function rand(min, max){ return Math.random() * (max - min) + min; }
-
-  function addSeeds(aspect){
-    for(let i=0;i<50;i++){
-      const el=document.createElement('img');
-      el.className='seed';
-      el.src=SEED_SRC; el.alt='';
-      el.width=20; el.height=20*aspect;
-      el.style.left=rand(0,banner.clientWidth)+'px';
-      el.style.animationDuration=rand(3.5,7.8)+'s';
-      banner.appendChild(el);
-    }
-  }
-
-  const probe=new Image();
-  probe.onload=()=> addSeeds(probe.naturalHeight/probe.naturalWidth||FALLBACK_ASPECT);
-  probe.onerror=()=> addSeeds(FALLBACK_ASPECT);
-  probe.src=SEED_SRC;
-})();
-
-/* ===== Subscribe form → EmailJS send ===== */
+/* ===== Subscribe form → EmailJS ===== */
 (function(){
   const form = document.getElementById('subscribe-form');
   if (!form || typeof emailjs === 'undefined') return;
-
   const input = document.getElementById('subscribe-email');
-  const msg   = document.getElementById('subscribe-msg');
-  const btn   = form.querySelector('button[type="submit"]');
-
-  const SERVICE_ID  = 'service_5n04n5s';
+  const msg = document.getElementById('subscribe-msg');
+  const btn = form.querySelector('button[type="submit"]');
+  const SERVICE_ID = 'service_5n04n5s';
   const TEMPLATE_ID = 'template_5567czh';
-
   const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  form.addEventListener('submit', async (e)=>{
+  form.addEventListener('submit', async e=>{
     e.preventDefault();
-    const email = (input.value || '').trim();
-
-    if (!isEmail(email)){
-      msg.textContent = 'Please enter a valid email address.';
-      msg.style.color = '#f77';
-      return;
+    const email = (input.value||'').trim();
+    if(!isEmail(email)){
+      msg.textContent='Please enter a valid email address.'; msg.style.color='#f77'; return;
     }
-
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-    msg.textContent = '';
-
+    btn.disabled=true; btn.textContent='Sending…'; msg.textContent='';
     try{
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-        customer_email: email,
-        page_url: location.href,
-        timestamp: new Date().toISOString()
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID,{
+        customer_email:email,
+        page_url:location.href,
+        timestamp:new Date().toISOString()
       });
-
-      msg.textContent = 'Thanks! You’re on the drop list.';
-      msg.style.color = '';
+      msg.textContent='Thanks! You’re on the list.'; msg.style.color='';
       form.reset();
     }catch(err){
       console.error(err);
-      msg.textContent = 'Something went wrong. Try again later.';
-      msg.style.color = '#f77';
+      msg.textContent='Something went wrong. Try again later.'; msg.style.color='#f77';
     }finally{
-      btn.disabled = false;
-      btn.textContent = 'Subscribe';
+      btn.disabled=false; btn.textContent='Subscribe';
     }
   });
 })();
 
-/* ===== Order form → EmailJS send ===== */
+/* ===== Order form → EmailJS ===== */
 (function(){
-  const form = document.getElementById('order-form');
-  if (!form || typeof emailjs === 'undefined') return;
-
-  const msg = document.getElementById('order-msg');
-
-  form.addEventListener('submit', async (e)=>{
+  const form=document.getElementById('order-form');
+  if(!form||typeof emailjs==='undefined') return;
+  const msg=document.getElementById('order-msg');
+  form.addEventListener('submit',async e=>{
     e.preventDefault();
-
-    const name    = (document.getElementById('order-name')   ?.value || '').trim();
-    const email   = (document.getElementById('order-email')  ?.value || '').trim();
-    const address = (document.getElementById('order-address')?.value || '').trim();
-    const cart    = readCart();
-
-    if(!cart.length){
-      msg.textContent = "Your cart is empty.";
-      msg.style.color = "#f77";
-      return;
-    }
-
-    // Human-readable + JSON cart summaries
-    const cartReadable = cart.map(i =>
-      `${i.name}  |  Pack: ${i.pack || '-'}  |  Qty: ${i.qty}  |  ${i.price != null ? '$'+Number(i.price).toFixed(2) : '—'}`
-    ).join('\n');
-
-    const total = cart.reduce((n,i)=> n + (i.price || 0) * i.qty, 0);
-
+    const name=(document.getElementById('order-name')?.value||'').trim();
+    const email=(document.getElementById('order-email')?.value||'').trim();
+    const address=(document.getElementById('order-address')?.value||'').trim();
+    const cart=readCart();
+    if(!cart.length){ msg.textContent="Your cart is empty."; msg.style.color="#f77"; return; }
+    const cartReadable=cart.map(i=>`${i.name} | Pack:${i.pack||'-'} | Qty:${i.qty} | ${i.price!=null?'$'+i.price.toFixed(2):'—'}`).join('\n');
+    const total=cart.reduce((n,i)=>n+(i.price||0)*i.qty,0);
     try{
-      await emailjs.send("service_5n04n5s", "template_sujzntx", {
-        // Preferred fields
-        customer_name: name,
-        customer_email: email,
-        customer_address: address,
-        cart_contents: cartReadable,
-        total_amount: `$${total.toFixed(2)}`,
-        timestamp: new Date().toISOString(),
-
-        // Legacy compatibility (if your template still references these)
-        from_name: name,
-        from_email: email,
-        phone: "",
-        street: address,
-        city: "", state: "", zip: "",
-        notes: "",
-        cart_readable: cartReadable,
-        cart_json: JSON.stringify(cart, null, 2),
-        submitted_at: new Date().toLocaleString(),
-        submit_ms: 0,
-
-        // Delivery helpers
-        to_email: "bloomvaultfarms@gmail.com",
-        reply_to: email
+      await emailjs.send("service_5n04n5s","template_sujzntx",{
+        customer_name:name,
+        customer_email:email,
+        customer_address:address,
+        cart_contents:cartReadable,
+        total_amount:`$${total.toFixed(2)}`,
+        timestamp:new Date().toISOString(),
+        from_name:name,from_email:email,to_email:"bloomvaultfarms@gmail.com"
       });
-
-      msg.textContent = "✅ Order sent! We’ll be in touch soon.";
-      msg.style.color = "";
-      form.reset();
-      writeCart([]); // clear cart
-      renderCart();
-      updateCartBubbles();
+      msg.textContent="✅ Order sent! We’ll be in touch soon."; msg.style.color="";
+      form.reset(); writeCart([]); renderCart(); updateCartBubbles();
     }catch(err){
       console.error(err);
-      msg.textContent = "❌ Something went wrong. Try again later.";
-      msg.style.color = "#f77";
+      msg.textContent="❌ Something went wrong. Try again later."; msg.style.color="#f77";
     }
   });
-})();
-
-// === Ensure compliance ribbon only appears once and in footer ===
-(function(){
-  const ribbonHTML = `
-    <div class="compliance-ribbon" style="margin-top:10px">
-      Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
-    </div>`;
-  const footer = document.querySelector('footer.site-footer');
-  const existing = document.querySelector('.compliance-ribbon');
-
-  if (!footer) return;
-
-  // If there's a ribbon already somewhere else, remove it.
-  if (existing && existing.parentElement !== footer) existing.remove();
-
-  // Ensure it's appended to the footer if missing
-  if (!footer.querySelector('.compliance-ribbon')) {
-    footer.insertAdjacentHTML('beforeend', ribbonHTML);
-  }
 })();
