@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Vault Journal · BloomVault Farms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<header class="bv-header">
+  <div class="bv-wrap">
+    <div class="bv-logo">
+      <a class="brand" href="index.html" aria-label="BloomVault Farms">
+        <img src="assets/img/logo.png" alt="BloomVault Farms">
+      </a>
+    </div>
+    <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
+  </div>
+
+  <nav class="bv-tabs" aria-label="Primary">
+    <a href="index.html">Home</a>
+    <a href="catalogue.html">Seed Catalogue</a>
+    <a href="about.html">About</a>
+    <a href="blog.html" class="active">Journal</a>
+    <a href="cart.html">Cart <span class="tab-badge" data-cart-tab-count>0</span></a>
+  </nav>
+</header>
+
+<div id="seed-rain-banner" aria-hidden="true"></div>
+
+<section class="container">
+  <h1 class="page-title">The Vault Journal</h1>
+  <p class="muted" style="max-width:760px">
+    Monthly notes on breeding, culture, and the plants we love — straight from Sutherlin, VA.
+  </p>
+
+  <div class="grid-3" style="margin-top:20px">
+    <!-- Post card 1 -->
+    <article class="bv-card" style="overflow:hidden">
+      <div class="card-image">
+        <img src="assets/img/blog/skunk-revival.jpg" alt="The Return of Skunk">
+      </div>
+      <div class="card-body">
+        <h3 class="strain-name" style="margin-bottom:8px">The Return of Skunk: Why Funk Is Back</h3>
+        <p class="muted" style="margin:0 0 12px">
+          Growers are chasing nose-first flavors again. A look at the old-school profiles influencing today’s breeding.
+        </p>
+        <a class="btn" href="blog-skunk-revival.html">Read</a>
+      </div>
+    </article>
+
+    <!-- Post card 2 -->
+    <article class="bv-card" style="overflow:hidden">
+      <div class="card-image">
+        <img src="assets/img/blog/va-hemp-2025.jpg" alt="Virginia Hemp 2025">
+      </div>
+      <div class="card-body">
+        <h3 class="strain-name" style="margin-bottom:8px">Virginia Hemp in 2025: A Grower’s Quick Guide</h3>
+        <p class="muted" style="margin:0 0 12px">
+          A plain-English summary of rules, definitions, and what compliant growers should watch this season.
+        </p>
+        <a class="btn" href="blog-va-hemp-2025.html">Read</a>
+      </div>
+    </article>
+
+    <!-- Post card 3 (placeholder) -->
+    <article class="bv-card" style="overflow:hidden">
+      <div class="card-image">
+        <img src="assets/img/blog/lab-notes.jpg" alt="Lab Notes">
+      </div>
+      <div class="card-body">
+        <h3 class="strain-name" style="margin-bottom:8px">Lab Notes: Inside a Small-Batch Cross</h3>
+        <p class="muted" style="margin:0 0 12px">
+          Parent selection, structure checks, and how we track phenos for vault-grade consistency.
+        </p>
+        <a class="btn" href="blog-lab-notes.html">Read</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
+  </div>
+</footer>
+
+<!-- Compliance ribbon at bottom -->
+<div class="compliance-ribbon">
+  Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
+</div>
+
+<script defer src="assets/js/app.js?v=14"></script>
+</body>
+</html>
