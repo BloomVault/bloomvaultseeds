@@ -158,6 +158,23 @@
   });
 </script>
 
+<!-- Replace one Candy/Citrus card image with Lemon Tree S1 art (still blurred + locked) -->
+<script>
+  (function () {
+    const lemonPath = 'assets/img/strains/lemon-tree-s1.png'; // make sure this file exists
+    // Prefer Candy/Citrus; if empty, fallback to Desserts
+    const lemonTarget =
+      document.querySelector('#sec-candy .bv-card.locked .card-image img') ||
+      document.querySelector('#sec-desserts .bv-card.locked .card-image img');
+
+    if (lemonTarget) {
+      lemonTarget.src = lemonPath;
+      lemonTarget.alt = 'Lemon Tree S1 (Locked)';
+      lemonTarget.loading = 'lazy';
+    }
+  })();
+</script>
+
 <!-- Your main JS (site-wide features) -->
 <script defer src="assets/js/app.js?v=21"></script>
 </body>
