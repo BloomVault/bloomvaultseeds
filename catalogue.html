@@ -27,16 +27,17 @@
     }
     .bv-card.locked .card-image img{
       width:100%; display:block;
-      filter: blur(6px) saturate(.9) brightness(.85);
-      transform: scale(1.03);
+      filter: blur(7px) saturate(.9) brightness(.82);
+      transform: scale(1.04);
     }
-    /* Same big lock on every card (inline SVG; color = #d3b062) */
+    /* Stronger vault-style closed lock (gold + subtle glow) */
     .bv-card.locked .card-image::after{
       content:"";
       position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      width:68px; height:68px; opacity:.98;
+      width:72px; height:72px; opacity:.97;
       background-repeat:no-repeat; background-position:center; background-size:contain;
-      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d3b062'><path d='M17 8h-1V6a4 4 0 10-8 0v2H7a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2zm-7-2a3 3 0 116 0v2H10V6zm8 12H7v-8h10v8z'/></svg>");
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23d3b062' d='M17 9V7a5 5 0 10-10 0v2H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1Zm-8-2a3 3 0 116 0v2H9V7Zm9 13H6v-9h12v9Z'/><path fill='%23cfa93c' d='M12 16.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z'/></svg>");
+      filter: drop-shadow(0 0 4px rgba(211,176,98,.35));
       pointer-events:none;
     }
     .bv-card.locked .strain-name{ letter-spacing:.3px; }
@@ -160,7 +161,7 @@
   });
 </script>
 
-<!-- Your main JS (safe to keep for site-wide features; it will not overwrite these placeholders) -->
-<script defer src="assets/js/app.js?v=20"></script>
+<!-- Your main JS (site-wide features) -->
+<script defer src="assets/js/app.js?v=21"></script>
 </body>
 </html>
