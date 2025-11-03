@@ -9,46 +9,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <style>
-    /* ===== Layout: 2-up grid ===== */
+    /* ===== 2-up grid (1-up on mobile) ===== */
     .grid-2{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:14px;
     }
-    @media (max-width: 640px){
-      .grid-2{ grid-template-columns:1fr; }
-    }
+    @media (max-width:640px){ .grid-2{ grid-template-columns:1fr; } }
 
     .flavor-section{ margin:26px 0 36px; }
     .flavor-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
     .flavor-head h2{ margin:0; font-size:28px; letter-spacing:.5px; }
 
-    /* ===== Placeholders visibility logic (no JS needed) =====
-       If the REAL grid (data-cat) is empty, show the placeholder grid.
-       If the REAL grid has content, hide the placeholder grid. */
-    .grid-2[data-cat]:empty + .placeholder-grid{ display:grid; }
-    .grid-2[data-cat]:not(:empty) + .placeholder-grid{ display:none; }
-
-    /* ===== Locked card styling ===== */
+    /* ===== Locked placeholder styling ===== */
     .bv-card.locked .card-image{
-      position:relative; overflow:hidden;
-      background:#0e0e0e;
+      position:relative; overflow:hidden; background:#0e0e0e;
     }
     .bv-card.locked .card-image img{
       width:100%; display:block;
-      filter: blur(5px) saturate(.9) brightness(.85);
-      transform: scale(1.02);
+      filter: blur(6px) saturate(.9) brightness(.85);
+      transform: scale(1.03);
     }
-    /* Big lock icon (inline SVG; color = #d3b062) */
+    /* Same big lock on every card (inline SVG; color = #d3b062) */
     .bv-card.locked .card-image::after{
       content:"";
-      position:absolute; inset:auto 0 0 0; margin:auto;
-      top:50%; transform:translateY(-50%);
-      width:60px; height:60px; opacity:.95;
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:68px; height:68px; opacity:.98;
       background-repeat:no-repeat; background-position:center; background-size:contain;
       background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d3b062'><path d='M17 8h-1V6a4 4 0 10-8 0v2H7a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2zm-7-2a3 3 0 116 0v2H10V6zm8 12H7v-8h10v8z'/></svg>");
       pointer-events:none;
     }
+    .bv-card.locked .strain-name{ letter-spacing:.3px; }
     .bv-card.locked [data-add]{ opacity:.7; cursor:not-allowed; }
   </style>
 </head>
@@ -101,14 +92,14 @@
 </section>
 
 <section class="container">
-  <!-- Helper: a 4x locked placeholder block -->
-  <template id="locked-four">
+  <!-- Reusable Locked Card Template -->
+  <template id="locked-card">
     <div class="bv-card locked">
       <div class="card-image">
         <img src="assets/img/locked-bud.jpg" alt="Locked preview">
       </div>
       <div class="card-body">
-        <h3 class="strain-name">Coming Soon</h3>
+        <h3 class="strain-name">Locked</h3>
         <div class="card-cta">
           <a class="btn" href="javascript:void(0)" aria-disabled="true">Details</a>
           <button class="btn" type="button" disabled data-add="locked">Add</button>
@@ -117,54 +108,35 @@
     </div>
   </template>
 
-  <!-- Desserts -->
+  <!-- Category sections (each with 4 locked cards) -->
   <div class="flavor-section">
     <div class="flavor-head"><h2>Desserts</h2><span class="muted">cookies • cake • cream</span></div>
-    <div class="grid-2" data-cat="desserts"></div>
-    <div class="grid-2 placeholder-grid">
-      <!-- 4 placeholders -->
-      <script>
-        for(let i=0;i<4;i++){
-          const t=document.getElementById('locked-four').content.cloneNode(true);
-          document.currentScript.parentElement.appendChild(t);
-        }
-      </script>
-    </div>
+    <div class="grid-2" id="sec-desserts"></div>
   </div>
 
-  <!-- Gas / Diesel -->
   <div class="flavor-section">
     <div class="flavor-head"><h2>Gas / Diesel</h2><span class="muted">fuel • octane • rubber</span></div>
-    <div class="grid-2" data-cat="gas"></div>
-    <div class="grid-2 placeholder-grid"></div>
+    <div class="grid-2" id="sec-gas"></div>
   </div>
 
-  <!-- Skunk / Funk -->
   <div class="flavor-section">
     <div class="flavor-head"><h2>Skunk / Funk</h2><span class="muted">RKS • classic funk</span></div>
-    <div class="grid-2" data-cat="skunk"></div>
-    <div class="grid-2 placeholder-grid"></div>
+    <div class="grid-2" id="sec-skunk"></div>
   </div>
 
-  <!-- Chem & OG -->
   <div class="flavor-section">
     <div class="flavor-head"><h2>Chem &amp; OG</h2><span class="muted">chem bite • pine • kush</span></div>
-    <div class="grid-2" data-cat="chem"></div>
-    <div class="grid-2 placeholder-grid"></div>
+    <div class="grid-2" id="sec-chem"></div>
   </div>
 
-  <!-- Candy / Citrus / Fruit -->
   <div class="flavor-section">
     <div class="flavor-head"><h2>Candy / Citrus / Fruit</h2><span class="muted">lemon • berry • sweet</span></div>
-    <div class="grid-2" data-cat="candy"></div>
-    <div class="grid-2 placeholder-grid"></div>
+    <div class="grid-2" id="sec-candy"></div>
   </div>
 
-  <!-- Classics -->
   <div class="flavor-section">
     <div class="flavor-head"><h2>Classics</h2><span class="muted">heritage &amp; balanced</span></div>
-    <div class="grid-2" data-cat="classics"></div>
-    <div class="grid-2 placeholder-grid"></div>
+    <div class="grid-2" id="sec-classics"></div>
   </div>
 </section>
 
@@ -174,21 +146,21 @@
   </div>
 </footer>
 
-<!-- EmailJS (before app.js) -->
+<!-- EmailJS (before app.js if you keep forms on this page later) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script> emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" }); </script>
+<script> emailjs.init({ publicKey:"Iph-DFQJujXfJ_gni" }); </script>
 
-<!-- Duplicate the 4 locked placeholders into each placeholder grid -->
+<!-- Stamp 4 locked cards into each section -->
 <script>
-  document.querySelectorAll('.placeholder-grid').forEach(grid=>{
-    for(let i=0;i<4;i++){
-      const t=document.getElementById('locked-four').content.cloneNode(true);
-      grid.appendChild(t);
-    }
+  const sections = ["sec-desserts","sec-gas","sec-skunk","sec-chem","sec-candy","sec-classics"];
+  const tpl = document.getElementById('locked-card');
+  sections.forEach(id=>{
+    const grid = document.getElementById(id);
+    for(let i=0;i<4;i++) grid.appendChild(tpl.content.cloneNode(true));
   });
 </script>
 
-<!-- Main JS -->
-<script defer src="assets/js/app.js?v=19"></script>
+<!-- Your main JS (safe to keep for site-wide features; it will not overwrite these placeholders) -->
+<script defer src="assets/js/app.js?v=20"></script>
 </body>
 </html>
