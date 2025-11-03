@@ -3,11 +3,12 @@
    ========================================================= */
 
 /* ===================== PRODUCTS ===================== */
+/* Tip: leave img null to show the blurred “locked” art automatically */
 const PRODUCTS = [
   {
     id: 'cookie-essence',
     name: 'Cookie Essence',
-    img: 'assets/img/strains/cookie-essence.png',
+    img: null, // 'assets/img/strains/cookie-essence.png'
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
@@ -24,7 +25,7 @@ const PRODUCTS = [
   {
     id: 'octane-peel',
     name: 'Octane Peel',
-    img: 'assets/img/strains/octane-peel.png',
+    img: null, // 'assets/img/strains/octane-peel.png'
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
@@ -41,7 +42,7 @@ const PRODUCTS = [
   {
     id: 'detonator-cake',
     name: 'Detonator Cake',
-    img: 'assets/img/strains/detonator-cake.png',
+    img: null, // 'assets/img/strains/detonator-cake.png'
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
@@ -58,7 +59,7 @@ const PRODUCTS = [
   {
     id: 'lemon-hazmat',
     name: 'Lemon HazMat',
-    img: 'assets/img/strains/lemon-hazmat.png',
+    img: null, // 'assets/img/strains/lemon-hazmat.png'
     available: true,
     type: 'Feminized',
     flower_type: 'Photoperiod',
@@ -75,6 +76,29 @@ const PRODUCTS = [
 ];
 
 window.PRODUCTS = PRODUCTS;
+
+/* ---------- Small style injector for locked cards (blur + badge) ---------- */
+(function injectLockedStyles(){
+  if (document.getElementById('bv-locked-styles')) return;
+  const css = `
+    .card-image.locked img{filter:blur(3.5px) brightness(.8); transform:scale(1.02);}
+    .card-image{position:relative; overflow:hidden;}
+    .card-image .lock-overlay{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      pointer-events:none;
+    }
+    .card-image .lock-badge{
+      background:rgba(0,0,0,.55); border:1px solid rgba(211,176,98,.55);
+      color:#d3b062; padding:8px 10px; border-radius:999px; font-weight:700; font-size:12px;
+      letter-spacing:.3px; display:flex; align-items:center; gap:6px; backdrop-filter:saturate(140%) blur(1px);
+    }
+    .card-image .lock-badge svg{width:14px;height:14px;display:block}
+  `;
+  const tag = document.createElement('style');
+  tag.id = 'bv-locked-styles';
+  tag.textContent = css;
+  document.head.appendChild(tag);
+})();
 
 /* ---------- Active link highlight (tabs-only) ---------- */
 (function(){
@@ -108,6 +132,126 @@ function updateCartBubbles(){
   document.querySelectorAll('[data-cart-tab-count]').forEach(el=> el.textContent = cartCount());
 }
 
+/* ===================== Helpers ===================== */
+const LOCKED_STOCK = 'assets/img/locked-bud.jpg';
+
+function isLocked(p){ return !p.img; } // locked look when no custom image yet
+
+function flavorBucket(p){
+  const f = (p.flavors || '').toLowerCase();
+  const name = (p.name || '').toLowerCase();
+  const txt = `${f} ${name}`;
+  if (/(cookie|cake|cream|vanilla|dessert|bakery)/.test(txt)) return 'desserts';
+  if (/(gas|diesel|fuel|octane|rubber)/.test(txt)) return 'gas';
+  if (/(skunk|funk|rks|roadkill)/.test(txt)) return 'skunk';
+  if (/(chem|chemical|og)/.test(txt)) return 'chem';
+  if (/(candy|fruit|berry|lemon|citrus|orange|grape)/.test(txt)) return 'candy';
+  return 'classics';
+}
+
+/* ===================== Card builder ===================== */
+function lockIconSVG(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>`;
+}
+
+function buildCard(p){
+  const locked = isLocked(p);
+  const imgSrc = locked ? LOCKED_STOCK : p.img;
+  return `
+    <div class="bv-card" data-id="${p.id}">
+      <div class="card-image ${locked ? 'locked' : ''}">
+        <img src="${imgSrc}" alt="${p.name}">
+        ${locked ? `
+          <div class="lock-overlay">
+            <div class="lock-badge">${lockIconSVG()} Locked Preview</div>
+          </div>` : ``}
+      </div>
+      <div class="card-body">
+        <h3 class="strain-name">${p.name}</h3>
+        <div class="card-cta">
+          <a class="btn" href="strain.html?id=${encodeURIComponent(p.id)}">Details</a>
+          <button class="btn" type="button" data-add="${p.id}" ${p.available ? '' : 'disabled'}>
+            ${p.available ? 'Add' : 'Coming Soon'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ===================== CATALOGUE RENDER ===================== */
+function renderCatalogue(){
+  // If the page declares flavor sections, fill them; else fall back to one grid
+  const sectionNodes = document.querySelectorAll('[data-cat]');
+  const hasSections = sectionNodes.length > 0;
+
+  const grid = document.getElementById('catalogue-grid') || document.querySelector('[data-grid]');
+  const typeSel = document.getElementById('filter-type');
+  const sortSel = document.getElementById('sort-price');
+
+  const typeVal = (typeSel?.value || '').trim();
+  const sortVal = (sortSel?.value || '').trim();
+
+  let items = PRODUCTS.filter(p => !typeVal || p.type === typeVal);
+
+  if (sortVal === 'asc'){
+    items.sort((a,b)=> (a.price??Infinity) - (b.price??Infinity));
+  } else if (sortVal === 'desc'){
+    items.sort((a,b)=> (b.price??-1) - (a.price??-1));
+  }
+
+  if (hasSections){
+    // Clear all sections
+    sectionNodes.forEach(sec => sec.innerHTML = '');
+    // Place each product into its flavor bucket
+    items.forEach(p=>{
+      const bucket = flavorBucket(p); // desserts, gas, skunk, chem, candy, classics
+      const target = document.querySelector(`[data-cat="${bucket}"]`);
+      if (target) target.insertAdjacentHTML('beforeend', buildCard(p));
+    });
+    // Wire Add buttons inside sections
+    document.querySelectorAll('[data-cat] [data-add]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
+        if(prod && prod.available){ openPackModal(prod); }
+      });
+    });
+  } else if (grid){
+    grid.innerHTML = items.map(buildCard).join('');
+    grid.querySelectorAll('[data-add]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
+        if(prod && prod.available){ openPackModal(prod); }
+      });
+    });
+  }
+}
+['filter-type','sort-price'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('change', renderCatalogue);
+});
+document.addEventListener('DOMContentLoaded', renderCatalogue);
+
+/* ====================== FEATURED (Home) ===================== */
+function renderFeatured(){
+  const grid = document.getElementById('featured-grid');
+  if(!grid) return;
+  const picks = PRODUCTS.slice(0,2);
+  grid.innerHTML = picks.map(buildCard).join('');
+  grid.querySelectorAll('[data-add]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
+      if(prod && prod.available){ openPackModal(prod); }
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', renderFeatured);
+
+/* ======================= CART STORE FUNCS ======================= */
 function addToCart(item){
   const items = readCart();
   const found = items.find(i=>i.id===item.id);
@@ -128,77 +272,6 @@ function updateQty(id, qty){
   }
 }
 document.addEventListener('DOMContentLoaded', updateCartBubbles);
-
-/* ===================== Card builder ===================== */
-function buildCard(p){
-  const hasImg = !!p.img;
-  return `
-    <div class="bv-card" data-id="${p.id}">
-      <div class="card-image">
-        ${hasImg ? `<img src="${p.img}" alt="${p.name}">` : `<div class="coming-soon">COMING SOON</div>`}
-      </div>
-      <div class="card-body">
-        <h3 class="strain-name">${p.name}</h3>
-        <div class="card-cta">
-          <a class="btn" href="strain.html?id=${encodeURIComponent(p.id)}">Details</a>
-          <button class="btn" type="button" data-add="${p.id}" ${p.available ? '' : 'disabled'}>
-            ${p.available ? 'Add' : 'Coming Soon'}
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-/* ===================== CATALOGUE RENDER ===================== */
-function renderCatalogue(){
-  const grid = document.getElementById('catalogue-grid') || document.querySelector('[data-grid]');
-  if(!grid) return;
-
-  const typeSel = document.getElementById('filter-type');
-  const sortSel = document.getElementById('sort-price');
-
-  const typeVal = (typeSel?.value || '').trim();
-  const sortVal = (sortSel?.value || '').trim();
-
-  let items = PRODUCTS.filter(p => !typeVal || p.type === typeVal);
-
-  if (sortVal === 'asc'){
-    items.sort((a,b)=> (a.price??Infinity) - (b.price??Infinity));
-  } else if (sortVal === 'desc'){
-    items.sort((a,b)=> (b.price??-1) - (a.price??-1));
-  }
-
-  grid.innerHTML = items.map(buildCard).join('');
-
-  grid.querySelectorAll('[data-add]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
-      if(prod && prod.available){ openPackModal(prod); }
-    });
-  });
-}
-['filter-type','sort-price'].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el) el.addEventListener('change', renderCatalogue);
-});
-document.addEventListener('DOMContentLoaded', renderCatalogue);
-
-/* ====================== FEATURED (Home) ===================== */
-function renderFeatured(){
-  const grid = document.getElementById('featured-grid');
-  if(!grid) return;
-  const picks = PRODUCTS.slice(0,2);
-  grid.innerHTML = picks.map(buildCard).join('');
-
-  grid.querySelectorAll('[data-add]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const prod = PRODUCTS.find(p=> p.id === btn.getAttribute('data-add'));
-      if(prod && prod.available){ openPackModal(prod); }
-    });
-  });
-}
-document.addEventListener('DOMContentLoaded', renderFeatured);
 
 /* ======================= CART RENDER ======================== */
 function renderCart(){
@@ -235,7 +308,8 @@ function renderCart(){
           <div class="bv-meta">Unit: ${unit}</div>
           <div style="margin-left:auto; display:flex; align-items:center; gap:8px">
             <label class="bv-meta" for="qty-${i.id}">Qty</label>
-            <input id="qty-${i.id}" type="number" min="1" value="${i.qty}" style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
+            <input id="qty-${i.id}" type="number" min="1" value="${i.qty}"
+                   style="width:80px;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f0f0f;color:#ddd">
           </div>
         </div>
       </div>
@@ -283,7 +357,8 @@ function fmtPrice(v){ return (v==null||isNaN(v)) ? '—' : `$${Number(v).toFixed
 
 function openPackModal(prod){
   PACK_MODAL_PRODUCT = prod;
-  document.getElementById('pack-prod-name').textContent = prod?.name || '';
+  const nameEl = document.getElementById('pack-prod-name');
+  if (nameEl) nameEl.textContent = prod?.name || '';
   const modal = document.getElementById('pack-modal');
   ['3','7','12'].forEach(pk=>{
     const btn = modal.querySelector(`[data-pack="${pk}"]`);
@@ -356,7 +431,7 @@ document.addEventListener('click', e=>{
     const address=(document.getElementById('order-address')?.value||'').trim();
     const cart=readCart();
     if(!cart.length){ msg.textContent="Your cart is empty."; msg.style.color="#f77"; return; }
-    const cartReadable=cart.map(i=>`${i.name} | Pack:${i.pack||'-'} | Qty:${i.qty} | ${i.price!=null?'$'+i.price.toFixed(2):'—'}`).join('\n');
+    const cartReadable=cart.map(i=>`${i.name} | Pack:${i.pack||'-'} | Qty:${i.qty} | ${i.price!=null?'$'+Number(i.price).toFixed(2):'—'}`).join('\n');
     const total=cart.reduce((n,i)=>n+(i.price||0)*i.qty,0);
     try{
       await emailjs.send("service_5n04n5s","template_sujzntx",{
