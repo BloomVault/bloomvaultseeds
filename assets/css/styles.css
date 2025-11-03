@@ -755,3 +755,36 @@ a{color:var(--gold)}
   color: var(--gold, #d4af37); /* uses your theme gold if defined */
   letter-spacing: .3px;
 }
+
+/* --- Catalogue sections --- */
+.catalogue-sections { display: grid; gap: 26px; }
+.catalogue-section h2 {
+  margin: 10px 0 12px;
+  font-size: 1.35rem;
+  letter-spacing: .3px;
+  color: #eaeaea;
+}
+
+/* Card: locked look (blur + lock) */
+.bv-card.locked .card-image {
+  position: relative;
+  overflow: hidden;
+}
+.bv-card.locked .card-image img {
+  filter: blur(4px) brightness(0.6);
+  transform: scale(1.03);
+}
+.bv-card.locked .lock-overlay {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.bv-card.locked .lock-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 999px;
+  background: rgba(15,15,15,.75);
+  border: 1px solid #2b2b2b;
+  color: #d3b062; font-weight: 600; font-size: .95rem;
+  backdrop-filter: blur(2px);
+}
+.bv-card.locked .lock-badge svg { width: 16px; height: 16px; }
