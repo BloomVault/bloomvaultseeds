@@ -4,11 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seed Catalogue · BloomVault Farms</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    /* small helpers so sections look good immediately */
+    .flavor-section{margin:26px 0 34px}
+    .flavor-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+    .flavor-head h2{margin:0;font-size:28px;letter-spacing:.5px}
+    .flavor-head .muted{opacity:.8}
+    .grid-4{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+    @media (max-width: 980px){ .grid-4{grid-template-columns:repeat(2,minmax(0,1fr));} }
+    @media (max-width: 540px){ .grid-4{grid-template-columns:1fr;} }
+  </style>
 </head>
 <body>
 <header class="bv-header">
@@ -21,7 +34,7 @@
     <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
   </div>
 
-  <!-- TABS -->
+  <!-- Tabs -->
   <nav class="bv-tabs" aria-label="Primary">
     <a href="index.html">Home</a>
     <a href="catalogue.html" class="active">Seed Catalogue</a>
@@ -31,7 +44,7 @@
   </nav>
 </header>
 
-<!-- Compliance ribbon near top so it's consistent site-wide -->
+<!-- Compliance ribbon (top notice) -->
 <div class="compliance-ribbon">
   Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
 </div>
@@ -41,9 +54,72 @@
   <p class="muted">Open the Vault and explore our lineup by flavor profile.</p>
 </section>
 
-<!-- Catalogue sections (rendered by app.js → renderCatalogue) -->
-<section class="catalogue container" style="margin-top:10px">
-  <div id="catalogue-sections" class="catalogue-sections"></div>
+<section class="filters container">
+  <div class="filter-row" style="display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 8px">
+    <label>Seed Type
+      <select id="filter-type" class="bv-select">
+        <option value="">All</option>
+        <option value="Feminized">Feminized</option>
+        <option value="Regular">Regular</option>
+      </select>
+    </label>
+    <label>Sort
+      <select id="sort-price" class="bv-select">
+        <option value="">Default</option>
+        <option value="asc">Price: Low → High</option>
+        <option value="desc">Price: High → Low</option>
+      </select>
+    </label>
+  </div>
+</section>
+
+<!-- Flavor Sections (these are what app.js fills via [data-cat]) -->
+<section class="container">
+
+  <div class="flavor-section" id="sec-desserts">
+    <div class="flavor-head">
+      <h2>Desserts</h2><span class="muted">cookies • cake • cream</span>
+    </div>
+    <div class="grid-4" data-cat="desserts"></div>
+  </div>
+
+  <div class="flavor-section" id="sec-gas">
+    <div class="flavor-head">
+      <h2>Gas / Diesel</h2><span class="muted">fuel • octane • rubber</span>
+    </div>
+    <div class="grid-4" data-cat="gas"></div>
+  </div>
+
+  <div class="flavor-section" id="sec-skunk">
+    <div class="flavor-head">
+      <h2>Skunk / Funk</h2><span class="muted">RKS • classic funk</span>
+    </div>
+    <div class="grid-4" data-cat="skunk"></div>
+  </div>
+
+  <div class="flavor-section" id="sec-chem">
+    <div class="flavor-head">
+      <h2>Chem &amp; OG</h2><span class="muted">chem bite • pine • kush</span>
+    </div>
+    <div class="grid-4" data-cat="chem"></div>
+  </div>
+
+  <div class="flavor-section" id="sec-candy">
+    <div class="flavor-head">
+      <h2>Candy / Citrus / Fruit</h2><span class="muted">lemon • berry • sweet</span>
+    </div>
+    <div class="grid-4" data-cat="candy"></div>
+  </div>
+
+  <div class="flavor-section" id="sec-classics">
+    <div class="flavor-head">
+      <h2>Classics</h2><span class="muted">heritage &amp; balanced</span>
+    </div>
+    <div class="grid-4" data-cat="classics"></div>
+  </div>
+
+  <!-- Fallback single grid (unused when sections exist, but safe to keep) -->
+  <div id="catalogue-grid" style="display:none"></div>
 </section>
 
 <footer class="site-footer">
@@ -52,13 +128,11 @@
   </div>
 </footer>
 
-<!-- EmailJS (ok to keep global; harmless here) -->
+<!-- EmailJS (before app.js) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
-</script>
+<script> emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" }); </script>
 
-<!-- Main app JS (make sure this includes the grouped-by-profile renderCatalogue) -->
-<script defer src="assets/js/app.js?v=16"></script>
+<!-- Main JS -->
+<script defer src="assets/js/app.js?v=18"></script>
 </body>
 </html>
