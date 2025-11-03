@@ -19,7 +19,7 @@
     .bv-card.locked .card-image::after{
       content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
       width:72px;height:72px;opacity:.97;background-repeat:no-repeat;background-position:center;background-size:contain;
-      /* gold lock without the dot (same as catalogue) */
+      /* gold closed lock (no dot), matches catalogue */
       background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23d3b062' d='M17 9V7a5 5 0 10-10 0v2H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1Zm-8-2a3 3 0 116 0v2H9V7Zm9 13H6v-9h12v9Z'/></svg>");
       filter:drop-shadow(0 0 4px rgba(211,176,98,.35));pointer-events:none
     }
@@ -81,7 +81,7 @@
     <a class="link" href="catalogue.html">View All</a>
   </div>
 
-  <!-- use 2-up like catalogue -->
+  <!-- 2-up grid like catalogue -->
   <div id="featured-grid" class="grid-2"></div>
 
   <!-- locked template (same as catalogue) -->
@@ -124,16 +124,14 @@
 
 <!-- EmailJS (must load before app.js) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
-</script>
+<script> emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" }); </script>
 
 <!-- Main app JS (kept) -->
 <script defer src="assets/js/app.js?v=9"></script>
 
-<!-- After app.js: overwrite the featured grid with 2 locked cards to match catalogue -->
+<!-- After app.js: stamp 2 locked cards into the featured grid -->
 <script>
-  (function(){
+  document.addEventListener('DOMContentLoaded', function () {
     const grid = document.getElementById('featured-grid');
     const tpl  = document.getElementById('locked-card');
     if(!grid || !tpl) return;
@@ -141,7 +139,7 @@
     for(let i=0;i<2;i++){
       grid.appendChild(tpl.content.cloneNode(true));
     }
-  })();
+  });
 </script>
 </body>
 </html>
