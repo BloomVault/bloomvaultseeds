@@ -451,3 +451,15 @@ document.addEventListener('click', e=>{
     }
   });
 })();
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('img').forEach(img => {
+    const src = (img.getAttribute('src')||'');
+    const isCritical = /assets\/img\/logo\.png|hero/i.test(src);
+    if (!isCritical) img.loading = 'lazy';
+    // CLS hint: if width/height missing, set CSS aspect-ratio fallback
+    if (!img.width && !img.height) img.style.aspectRatio = '4 / 3';
+  });
+});
+</script>
