@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="assets/css/styles.css">
 
   <style>
+    /* Hide/neutralize seed banner globally (safeguard in case CSS targets it) */
+    #seed-rain-banner { display:none !important; height:0 !important; margin:0 !important; padding:0 !important; }
+
     /* --- Cart & Checkout polish --- */
     .checkout-form input,
     .checkout-form textarea {
@@ -80,21 +83,21 @@
     <a href="catalogue.html">Seed Catalogue</a>
     <a href="about.html">About</a>
     <a href="blog.html">Journal</a>
-    <a href="cart.html">Cart <span class="tab-badge" data-cart-tab-count>0</span></a>
+    <a href="cart.html" class="active">Cart <span class="tab-badge" data-cart-tab-count>0</span></a>
   </nav>
 </header>
 
-<div id="seed-rain-banner" aria-hidden="true"></div>
+<!-- Removed: <div id="seed-rain-banner" aria-hidden="true"></div> -->
 
 <div class="compliance-ribbon">
   Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
 </div>
 
 <section class="container">
-<h1 class="page-title">
-  Your Cart
-  <span data-total style="margin-left:10px;font-weight:700;color:#d4af37;letter-spacing:.3px">$0.00</span>
-</h1>
+  <h1 class="page-title">
+    Your Cart
+    <span data-total style="margin-left:10px;font-weight:700;color:#d4af37;letter-spacing:.3px">$0.00</span>
+  </h1>
 
   <!-- Cart items -->
   <div data-cart-root></div>
@@ -157,7 +160,7 @@ Country"></textarea>
   </div>
 </section>
 
-  <!-- Compliance & FAQ (compact) -->
+<!-- Compliance & FAQ (compact) -->
 <section class="container" style="margin-top:40px">
   <h2 style="margin-bottom:14px">Compliance & FAQ (Quick Read)</h2>
 
