@@ -81,8 +81,8 @@
     <a class="link" href="catalogue.html">View All</a>
   </div>
 
-  <!-- 2-up grid like catalogue -->
-  <div id="featured-grid" class="grid-2"></div>
+  <!-- Use different ID so app.js won't inject Cookie/Octane -->
+  <div id="featured-grid-locked" class="grid-2"></div>
 
   <!-- locked template (same as catalogue) -->
   <template id="locked-card">
@@ -132,7 +132,7 @@
 <!-- After app.js: stamp 2 locked cards into the featured grid -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const grid = document.getElementById('featured-grid');
+    const grid = document.getElementById('featured-grid-locked');
     const tpl  = document.getElementById('locked-card');
     if(!grid || !tpl) return;
     grid.innerHTML = "";
