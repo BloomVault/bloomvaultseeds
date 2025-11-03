@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seed Catalogue · BloomVault Farms</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -20,55 +21,44 @@
     <div class="bv-cartchip">Cart <span class="bv-badge" data-cart-count>0</span></div>
   </div>
 
-  <!-- TABS (no hamburger) -->
+  <!-- TABS -->
   <nav class="bv-tabs" aria-label="Primary">
     <a href="index.html">Home</a>
-    <a href="catalogue.html">Seed Catalogue</a>
+    <a href="catalogue.html" class="active">Seed Catalogue</a>
     <a href="about.html">About</a>
     <a href="blog.html">Journal</a>
     <a href="cart.html">Cart <span class="tab-badge" data-cart-tab-count>0</span></a>
   </nav>
 </header>
 
-<!-- Seed Rain Banner sits directly under the tabs -->
-<div id="seed-rain-banner" aria-hidden="true"></div>
-
-<div class="compliance-ribbon">Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.</div>
+<!-- Compliance ribbon near top so it's consistent site-wide -->
+<div class="compliance-ribbon">
+  Seeds are sold as novelty/souvenir genetics. Buyer is responsible for compliance with local laws. 21+ only.
+</div>
 
 <section class="page-head container">
   <h1 class="page-title">Seed Catalogue</h1>
-  <p class="muted">Open the Vault and explore our wide variety of strains.</p>
+  <p class="muted">Open the Vault and explore our lineup by flavor profile.</p>
 </section>
-<section class="filters container">
-  <div class="filter-row" style="display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 16px">
-    <label>Seed Type
-      <select id="filter-type" class="bv-select">
-        <option value="">All</option>
-        <option value="Feminized">Feminized</option>
-        <option value="Regular">Autoflower</option>
-      </select>
-    </label>
 
+<!-- Catalogue sections (rendered by app.js → renderCatalogue) -->
 <section class="catalogue container" style="margin-top:10px">
-  <div id="catalogue-grid"></div>
+  <div id="catalogue-sections" class="catalogue-sections"></div>
 </section>
-
 
 <footer class="site-footer">
   <div class="container">
     <p>© <span id="year"></span> BloomVault Farms — Premium Genetics, Curated with Care.</p>
   </div>
 </footer>
-  <!-- EmailJS (must load before app.js) -->
+
+<!-- EmailJS (ok to keep global; harmless here) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   emailjs.init({ publicKey: "Iph-DFQJujXfJ_gni" });
 </script>
 
-<!-- Your main JS (after EmailJS). Cache-busted with ?v=7 -->
-<script defer src="assets/js/app.js?v=7"></script>
-</body>
-</html>
-
+<!-- Main app JS (make sure this includes the grouped-by-profile renderCatalogue) -->
+<script defer src="assets/js/app.js?v=16"></script>
 </body>
 </html>
