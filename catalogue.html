@@ -10,11 +10,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <style>
     /* ===== 2-up grid (1-up on mobile) ===== */
-    .grid-2{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
-    }
+    .grid-2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
     @media (max-width:640px){ .grid-2{ grid-template-columns:1fr; } }
 
     .flavor-section{ margin:26px 0 36px; }
@@ -22,9 +18,7 @@
     .flavor-head h2{ margin:0; font-size:28px; letter-spacing:.5px; }
 
     /* ===== Locked placeholder styling ===== */
-    .bv-card.locked .card-image{
-      position:relative; overflow:hidden; background:#0e0e0e;
-    }
+    .bv-card.locked .card-image{ position:relative; overflow:hidden; background:#0e0e0e; }
     .bv-card.locked .card-image img{
       width:100%; display:block;
       filter: blur(7px) saturate(.9) brightness(.82);
@@ -111,7 +105,7 @@
 
   <!-- Category sections (each with 4 locked cards) -->
   <div class="flavor-section">
-    <div class="flavor-head"><h2>Desserts🍪</h2><span class="muted">cookies • cake • cream</span></div
+    <div class="flavor-head"><h2>Desserts🍪</h2><span class="muted">cookies • cake • cream</span></div>
     <div class="grid-2" id="sec-desserts"></div>
   </div>
 
@@ -151,13 +145,16 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script> emailjs.init({ publicKey:"Iph-DFQJujXfJ_gni" }); </script>
 
-<!-- Stamp 4 locked cards into each section -->
+<!-- Stamp 4 locked cards into each section (after DOM is ready) -->
 <script>
-  const sections = ["sec-desserts","sec-gas","sec-skunk","sec-chem","sec-candy","sec-classics"];
-  const tpl = document.getElementById('locked-card');
-  sections.forEach(id=>{
-    const grid = document.getElementById(id);
-    for(let i=0;i<4;i++) grid.appendChild(tpl.content.cloneNode(true));
+  document.addEventListener('DOMContentLoaded', function(){
+    const sections = ["sec-desserts","sec-gas","sec-skunk","sec-chem","sec-candy","sec-classics"];
+    const tpl = document.getElementById('locked-card');
+    sections.forEach(id=>{
+      const grid = document.getElementById(id);
+      if(!grid || !tpl) return;
+      for(let i=0;i<4;i++){ grid.appendChild(tpl.content.cloneNode(true)); }
+    });
   });
 </script>
 
