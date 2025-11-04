@@ -9,30 +9,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
   <style>
-    /* ===== 2-up grid (1-up on mobile) ===== */
     .grid-2{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
     @media (max-width:640px){ .grid-2{ grid-template-columns:1fr; } }
-
     .flavor-section{ margin:26px 0 36px; }
     .flavor-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
     .flavor-head h2{ margin:0; font-size:28px; letter-spacing:.5px; }
 
-    /* ===== Locked placeholder styling ===== */
+    /* Locked placeholder styling */
     .bv-card.locked .card-image{ position:relative; overflow:hidden; background:#0e0e0e; }
     .bv-card.locked .card-image img{
-      width:100%; display:block;
-      filter: blur(7px) saturate(.9) brightness(.82);
-      transform: scale(1.04);
+      width:100%; display:block; filter:blur(7px) saturate(.9) brightness(.82); transform:scale(1.04);
     }
-    /* Vault-style lock (dot removed) */
     .bv-card.locked .card-image::after{
-      content:"";
-      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      width:72px; height:72px; opacity:.97;
-      background-repeat:no-repeat; background-position:center; background-size:contain;
+      content:""; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:72px; height:72px; opacity:.97; background-repeat:no-repeat; background-position:center; background-size:contain;
       background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23d3b062' d='M17 9V7a5 5 0 10-10 0v2H6a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2v-9a2 2 0 00-2-2h-1Zm-8-2a3 3 0 116 0v2H9V7Zm9 13H6v-9h12v9Z'/></svg>");
-      filter: drop-shadow(0 0 4px rgba(211,176,98,.35));
-      pointer-events:none;
+      filter:drop-shadow(0 0 4px rgba(211,176,98,.35)); pointer-events:none;
     }
     .bv-card.locked .strain-name{ letter-spacing:.3px; }
     .bv-card.locked [data-add]{ opacity:.7; cursor:not-allowed; }
@@ -103,7 +95,7 @@
     </div>
   </template>
 
-  <!-- Category sections (each with 4 locked cards) -->
+  <!-- Category sections -->
   <div class="flavor-section">
     <div class="flavor-head"><h2>Desserts🍪</h2><span class="muted">cookies • cake • cream</span></div>
     <div class="grid-2" id="sec-desserts"></div>
@@ -141,11 +133,10 @@
   </div>
 </footer>
 
-<!-- EmailJS (before app.js if you keep forms on this page later) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script> emailjs.init({ publicKey:"Iph-DFQJujXfJ_gni" }); </script>
 
-<!-- Stamp 4 locked cards into each section (after DOM is ready) -->
+<!-- 1) Build the 4 placeholders per section -->
 <script>
   document.addEventListener('DOMContentLoaded', function(){
     const sections = ["sec-desserts","sec-gas","sec-skunk","sec-chem","sec-candy","sec-classics"];
@@ -158,24 +149,20 @@
   });
 </script>
 
-<!-- Replace one Candy/Citrus card image with Lemon Tree S1 art (still blurred + locked) -->
+<!-- 2) After placeholders exist, swap ONE Candy/Citrus image to Lemon Tree S1 -->
 <script>
-  (function () {
-    const lemonPath = 'assets/img/strains/lemon-tree-s1.png'; // make sure this file exists
-    // Prefer Candy/Citrus; if empty, fallback to Desserts
-    const lemonTarget =
-      document.querySelector('#sec-candy .bv-card.locked .card-image img') ||
-      document.querySelector('#sec-desserts .bv-card.locked .card-image img');
-
-    if (lemonTarget) {
-      lemonTarget.src = lemonPath;
-      lemonTarget.alt = 'Lemon Tree S1 (Locked)';
-      lemonTarget.loading = 'lazy';
+  document.addEventListener('DOMContentLoaded', function(){
+    const lemonPath = 'assets/img/strains/lemon-tree-s1.png'; // ensure this file exists
+    const target = document.querySelector('#sec-candy .bv-card.locked .card-image img')
+               ||  document.querySelector('#sec-desserts .bv-card.locked .card-image img');
+    if (target){
+      target.src = lemonPath;
+      target.alt = 'Lemon Tree S1 (Locked)';
+      target.loading = 'lazy';
     }
-  })();
+  });
 </script>
 
-<!-- Your main JS (site-wide features) -->
 <script defer src="assets/js/app.js?v=21"></script>
 </body>
 </html>
