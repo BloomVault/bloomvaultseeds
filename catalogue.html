@@ -149,30 +149,27 @@
   });
 </script>
 
-<!-- 2) Lemon Tree S1 in Candy/Citrus (keeps blur/lock) -->
+<!-- 2) Robust loader for Lemon Tree S1 (Candy/Citrus) and GG4 (Classics) with extension fallback -->
 <script>
   document.addEventListener('DOMContentLoaded', function(){
-    const lemonPath = 'assets/img/strains/lemon-tree-s1.png'; // ensure this file exists
-    const target = document.querySelector('#sec-candy .bv-card.locked .card-image img')
-               ||  document.querySelector('#sec-desserts .bv-card.locked .card-image img');
-    if (target){
-      target.src = lemonPath;
-      target.alt = 'Lemon Tree S1 (Locked)';
-      target.loading = 'lazy';
+    function setCardImage(selector, baseName){
+      const img = document.querySelector(selector);
+      if(!img) return;
+      const exts = ['.png','.jpg','.jpeg','.webp'];
+      let i = 0;
+      function tryNext(){
+        if(i >= exts.length) return;      // keep placeholder if none found
+        img.onerror = () => { i++; tryNext(); };
+        img.src = `assets/img/strains/${baseName}${exts[i]}`;
+      }
+      tryNext();
+      img.alt = baseName.replace(/-/g,' ') + ' (Locked)';
+      img.loading = 'lazy';
     }
-  });
-</script>
-
-<!-- 3) Gorilla Glue #4 in Classics (keeps blur/lock) -->
-<script>
-  document.addEventListener('DOMContentLoaded', function(){
-    const gg4Path = 'assets/img/strains/gg4-classic.png'; // place your GG4 image here
-    const classicImg = document.querySelector('#sec-classics .bv-card.locked .card-image img');
-    if (classicImg){
-      classicImg.src = gg4Path;
-      classicImg.alt = 'Gorilla Glue #4 (Locked)';
-      classicImg.loading = 'lazy';
-    }
+    // Candy/Citrus → Lemon Tree S1
+    setCardImage('#sec-candy .bv-card.locked .card-image img', 'lemon-tree-s1');
+    // Classics → Gorilla Glue #4
+    setCardImage('#sec-classics .bv-card.locked .card-image img', 'gg4-classic');
   });
 </script>
 
